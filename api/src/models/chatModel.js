@@ -7,6 +7,22 @@ module.exports = (sequelize) => {
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
     },
+    usuario_id: {
+      type: DataTypes.UUID,  // Cambiado a UUID
+      allowNull: false,
+      references: {
+        model: 'Usuarios',
+        key: 'id',
+      },
+    },
+    negocio_id: {
+      type: DataTypes.UUID,
+      allowNull: false,
+      references: {
+        model: 'Negocios',
+        key: 'id',
+      },
+    },
     mensaje: {
       type: DataTypes.TEXT,
       allowNull: false,

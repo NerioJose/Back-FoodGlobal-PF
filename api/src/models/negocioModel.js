@@ -12,8 +12,16 @@ module.exports = (sequelize) => {
       allowNull: false,
     },
     descripcion: {
-      type: DataTypes.TEXT,
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    usuario_id: {
+      type: DataTypes.UUID,  // Cambiado a UUID
       allowNull: false,
+      references: {
+        model: 'Usuarios',
+        key: 'id',
+      },
     },
   });
 };
