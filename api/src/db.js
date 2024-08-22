@@ -31,6 +31,41 @@ let entries = Object.entries(sequelize.models);
 let capsEntries = entries.map(([name, model]) => [name[0].toUpperCase() + name.slice(1), model]);
 sequelize.models = Object.fromEntries(capsEntries);
 
+// En sequelize.models están todos los modelos importados como propiedades
+const { Chat, Negocio, Notificacion, Pago, Pedido, Producto, Reseña, Usuario } = sequelize.models;
+
+// Relación Chat
+Chat.belongsTo(Usuario, { foreignKey: 'usuarioId' });
+Usuario.hasMany(Chat, { foreignKey: 'usuarioId' });
+Chat.belongsTo(Negocio, { foreignKey: 'negocioId' });
+Negocio.hasMany(Chat, { foreignKey: 'negocioId' });
+
+// Relación Negocio
+Negocio.belongsTo(Usuario, { as: 'propietario', foreignKey: 'usuarioId' });
+Usuario.hasMany(Negocio, { foreignKey: 'usuarioId' });
+
+// Relación Notificación
+Notificacion.belongsTo(Usuario, { foreignKey: 'usuarioId' });
+Usuario.hasMany(Notificacion, { foreignKey: 'usuarioId' });
+
+// Relación Pago
+Pago.belongsTo(Pedido, { foreignKey: 'pedidoId' });
+Pedido.hasOne(Pago, { foreignKey: 'pedidoId' });
+
+// Relación Pedido
+Pedido.belongsTo(Usuario, { foreignKey: 'usuarioId' });
+Usuario.hasMany(Pedido, { foreignKey: 'usuarioId' });
+
+// Relación Producto
+Producto.belongsTo(Negocio, { foreignKey: 'negocioId' });
+Negocio.hasMany(Producto, { foreignKey: 'negocioId' });
+
+// Relación Reseña
+Reseña.belongsTo(Usuario, { foreignKey: 'usuarioId' });
+Usuario.hasMany(Reseña, { foreignKey: 'usuarioId' });
+Reseña.belongsTo(Producto, { foreignKey: 'productoId' });
+Producto.hasMany(Reseña, { foreignKey: 'productoId' });
+
 // Exporta la conexión y los modelos
 module.exports = {
   ...sequelize.models, 
