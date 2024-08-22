@@ -32,7 +32,7 @@ let capsEntries = entries.map(([name, model]) => [name[0].toUpperCase() + name.s
 sequelize.models = Object.fromEntries(capsEntries);
 
 // En sequelize.models están todos los modelos importados como propiedades
-const { Chat, Negocio, Notificacion, Pago, Pedido, Producto, Reseña, Usuario } = sequelize.models;
+const { Chat, Negocio, Notificacion, Pago, Pedido, Producto, Reseña, Usuario, Carrito, Carrito_Producto } = sequelize.models;
 
 // Relación Chat
 Chat.belongsTo(Usuario, { foreignKey: 'usuarioId' });
@@ -65,6 +65,16 @@ Reseña.belongsTo(Usuario, { foreignKey: 'usuarioId' });
 Usuario.hasMany(Reseña, { foreignKey: 'usuarioId' });
 Reseña.belongsTo(Producto, { foreignKey: 'productoId' });
 Producto.hasMany(Reseña, { foreignKey: 'productoId' });
+
+// Relaciones Carrito
+Carrito.belongsTo(Usuario, { foreignKey: 'usuarioId' });
+Usuario.hasMany(Carrito, { foreignKey: 'usuarioId' });
+
+Carrito_Producto.belongsTo(Carrito, { foreignKey: 'carritoId' });
+Carrito.hasMany(Carrito_Producto, { foreignKey: 'carritoId' });
+
+Carrito_Producto.belongsTo(Producto, { foreignKey: 'productoId' });
+Producto.hasMany(Carrito_Producto, { foreignKey: 'productoId' });
 
 // Exporta la conexión y los modelos
 module.exports = {
