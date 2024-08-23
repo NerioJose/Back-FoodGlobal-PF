@@ -3,9 +3,25 @@ const { DataTypes } = require('sequelize');
 module.exports = (sequelize) => {
   sequelize.define('Reseña', {
     id: {
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
       primaryKey: true,
+    },
+    usuario_id: {
+      type: DataTypes.UUID,  // Cambiado a UUID
+      allowNull: false,
+      references: {
+        model: 'Usuarios',
+        key: 'id',
+      },
+    },
+    producto_id: {
+      type: DataTypes.UUID,
+      allowNull: false,
+      references: {
+        model: 'Productos',
+        key: 'id',
+      },
     },
     calificacion: {
       type: DataTypes.INTEGER,
@@ -13,6 +29,7 @@ module.exports = (sequelize) => {
     },
     comentario: {
       type: DataTypes.TEXT,
+      allowNull: true,
     },
   });
 };

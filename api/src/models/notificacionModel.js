@@ -1,14 +1,14 @@
 const { DataTypes } = require('sequelize');
 
 module.exports = (sequelize) => {
-  sequelize.define('Notificacion', {
+  sequelize.define('Notificaciones', {
     id: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
     },
     usuario_id: {
-      type: DataTypes.UUID,  // Cambiado a UUID
+      type: DataTypes.UUID,  
       allowNull: false,
       references: {
         model: 'Usuarios',
