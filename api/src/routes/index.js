@@ -13,6 +13,7 @@ const getUsuarios = require('../controllers/getControllers/getUsuarios');
 //Post Controllers
 const postNegocios = require('../controllers/postControllers/postNegocios');
 const postProductos = require('../controllers/postControllers/postProductos');
+const postUsuarios = require('../controllers/postControllers/postUsuarios');
 
 
 
@@ -25,5 +26,6 @@ routes.get('/usuarios', getUsuarios); // Obtener la lista de usuarios
 
 routes.post('/negocios', postNegocios);// Crear Negocios
 routes.post('/productos', postProductos);//Crear Productos
+routes.post('/usuarios', postUsuarios);
 
 module.exports = routes;
