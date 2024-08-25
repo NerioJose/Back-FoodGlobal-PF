@@ -25,7 +25,9 @@ module.exports = (sequelize) => {
       allowNull: false,
       defaultValue: 'usuario',
     },
-  });
+  },
+{paranoid: true} //activa borrado lógico
+);
   timestamp: false
 };
 

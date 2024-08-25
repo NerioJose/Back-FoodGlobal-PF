@@ -53,11 +53,17 @@ Pago.belongsTo(Pedido, { foreignKey: 'pedido_id' });
 Pedido.hasOne(Pago, { foreignKey: 'pedido_id' });
 
 // Relación Pedido
-Pedido.belongsTo(Usuario, { foreignKey: 'usuario_id' });
+Pedido.belongsTo(Usuario, { foreignKey: {
+  name: 'usuario_id',
+  allowNull: false // nunca se puede crear un Producto sin un Negocio asociado 
+  }});
 Usuario.hasMany(Pedido, { foreignKey: 'usuario_id' });
 
 // Relación Producto
-Producto.belongsTo(Negocio, { foreignKey: 'negocio_id' });
+Producto.belongsTo(Negocio, { foreignKey: {
+  name: 'negocio_id',
+  allowNull: false // nunca se puede crear un Producto sin un Negocio asociado
+} });
 Negocio.hasMany(Producto, { foreignKey: 'negocio_id' });
 
 // Relación Reseña

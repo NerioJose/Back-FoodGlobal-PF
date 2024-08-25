@@ -3,10 +3,10 @@ const { Producto } = require('../../db');
 const postProductos = async (req, res) => {
   try {
     // Desestructurar los campos necesarios desde req.body
-    const { nombre, descripcion, precio } = req.body;
+    const { nombre, descripcion, precio, negocio_id } = req.body;
 
     // Validar que los campos requeridos estén presentes
-    if (!nombre || !descripcion || !precio) {
+    if (!nombre || !descripcion || !precio || !negocio_id) {
       return res.status(400).json({ message: 'Faltan datos obligatorios.' });
     }
 
@@ -15,6 +15,7 @@ const postProductos = async (req, res) => {
       nombre,
       descripcion,
       precio,
+      negocio_id
     });
 
     // Enviar una respuesta exitosa al cliente
