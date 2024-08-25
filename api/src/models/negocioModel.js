@@ -16,7 +16,7 @@ module.exports = (sequelize) => {
       allowNull: true,
     },
     usuario_id: {
-      type: DataTypes.UUID,  // Cambiado a UUID
+      type: DataTypes.UUID, 
       allowNull: false,
       references: {
         model: 'Usuarios',
