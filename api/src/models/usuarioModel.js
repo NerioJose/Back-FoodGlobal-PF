@@ -26,6 +26,7 @@ module.exports = (sequelize) => {
       defaultValue: 'usuario',
     },
   });
+  timestamp: false
 };
 
 

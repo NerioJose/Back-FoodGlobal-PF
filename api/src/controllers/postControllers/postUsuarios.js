@@ -4,13 +4,14 @@ const { Usuario } = require('../../db');
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/; // Contraseña entre 6 y 20 caracteres, con al menos un número, una letra mayúscula y una letra minúscula
 const rolRegex = /^(admin|usuario)$/; // Roles permitidos
+const nombreRegex = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/; // Solo letras y espacios
 
 const postUsuarios = async (req, res) => {
   const { nombre, email, password, rol } = req.body;
 
   // Validar nombre
-  if (typeof nombre !== 'string' || nombre.length < 3) {
-    return res.status(400).json({ error: 'El nombre debe ser una cadena de al menos 3 letras.' });
+  if (typeof nombre !== 'string' || nombre.length < 3 || !nombreRegex.test(nombre)) {
+    return res.status(400).json({ error: 'El nombre debe ser una cadena de al menos 3 letras y no debe contener solo números o símbolos.' });
   }
 
   // Validar email
@@ -39,6 +40,7 @@ const postUsuarios = async (req, res) => {
     const nuevoUsuario = await Usuario.create({ nombre, email, password, rol });
     return res.status(201).json(nuevoUsuario);
   } catch (error) {
+    console.error(error); // Mejorar la visibilidad del error en los logs
     return res.status(500).json({ error: 'Error al crear el usuario.' });
   }
 };
