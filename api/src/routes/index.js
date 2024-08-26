@@ -16,7 +16,10 @@ const postProductos = require('../controllers/postControllers/postProductos');
 const postUsuarios = require('../controllers/postControllers/postUsuarios');
 const loginUsuario = require('../controllers/postControllers/loginUsuario'); // Importa el controlador de login
 
-
+// Delete Controller
+const deleteUsuario = require('../controllers/deleteControllers/deleteUsuario'); // Importa el controlador de eliminación
+const deleteProducto = require('../controllers/deleteControllers/deleteProducto'); // NUEVO: Importa el controlador de eliminación de producto
+const deleteNegocio = require('../controllers/deleteControllers/deleteNegocio'); // NUEVO: Importa el controlador de eliminación de negocio
 
 // Configurar las rutas
 routes.get('/negocios', getNegocios); // Obtener la lista de negocios
@@ -37,5 +40,14 @@ routes.post('/negocios', postNegocios);// Crear Negocios
 routes.post('/productos', postProductos);//Crear Productos
 routes.post('/usuarios', postUsuarios);
 routes.post('/login', loginUsuario); // Nueva ruta para login de usuarios
+
+// Ruta para eliminar un usuario
+routes.delete('/usuarios/:id', deleteUsuario); // Elimina un usuario por ID
+
+// NUEVO: Ruta para eliminar un producto
+routes.delete('/productos/:id', deleteProducto); // Elimina un producto por ID
+
+// Ruta para eliminar un negocio
+routes.delete('/negocios/:id', deleteNegocio); // Elimina un negocio por ID
 
 module.exports = routes;
