@@ -55,7 +55,7 @@ Pedido.hasOne(Pago, { foreignKey: 'pedido_id' });
 // Relación Pedido
 Pedido.belongsTo(Usuario, { foreignKey: {
   name: 'usuario_id',
-  allowNull: false // nunca se puede crear un Producto sin un Negocio asociado 
+  allowNull: false // la columna usuario_id no puede ser nula (NULL), lo que asegura que cada Pedido debe estar asociado a un Usuario. No es posible crear un Pedido sin un Usuario relacionado.
   }});
 Usuario.hasMany(Pedido, { foreignKey: 'usuario_id' });
 
