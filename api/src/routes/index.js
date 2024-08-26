@@ -14,18 +14,28 @@ const getUsuarios = require('../controllers/getControllers/getUsuarios');
 const postNegocios = require('../controllers/postControllers/postNegocios');
 const postProductos = require('../controllers/postControllers/postProductos');
 const postUsuarios = require('../controllers/postControllers/postUsuarios');
+const loginUsuario = require('../controllers/postControllers/loginUsuario'); // Importa el controlador de login
 
 
 
 // Configurar las rutas
 routes.get('/negocios', getNegocios); // Obtener la lista de negocios
 routes.get('/negocios/:id', getDetailNegocios); // Obtener detalles de un negocio específico
+// Obtener negocios por nombre (nuevo)
+// routes.get('/negocios/search', getNegociosByNombre); // Nueva ruta para buscar negocios por nombre
+
 routes.get('/productos', getProductos); // Obtener la lista de productos
-routes.get('/productos/:id', getDetailProductos); // Obtener detalles de un producto específico
+routes.get('/productos/:id', getDetailProductos); // Obtener detalles de un producto específico por id
+// Obtener productos por nombre (nuevo)
+// routes.get('/productos/search', getProductosByNombre); // Nueva ruta para buscar productos por nombre
+
 routes.get('/usuarios', getUsuarios); // Obtener la lista de usuarios
+// Obtener usuarios por nombre (nuevo)
+// routes.get('/usuarios/search', getUsuariosByNombre); // Nueva ruta para buscar usuarios por nombre
 
 routes.post('/negocios', postNegocios);// Crear Negocios
 routes.post('/productos', postProductos);//Crear Productos
 routes.post('/usuarios', postUsuarios);
+routes.post('/login', loginUsuario); // Nueva ruta para login de usuarios
 
 module.exports = routes;

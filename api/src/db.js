@@ -35,46 +35,52 @@ sequelize.models = Object.fromEntries(capsEntries);
 const { Chat, Negocio, Notificaciones, Pago, Pedido, Producto, Reseña, Usuario, Carrito, Carrito_Producto } = sequelize.models;
 
 // Relación Chat
-Chat.belongsTo(Usuario, { foreignKey: 'usuarioId' });
-Usuario.hasMany(Chat, { foreignKey: 'usuarioId' });
-Chat.belongsTo(Negocio, { foreignKey: 'negocioId' });
-Negocio.hasMany(Chat, { foreignKey: 'negocioId' });
+Chat.belongsTo(Usuario, { foreignKey: 'usuario_id' });
+Usuario.hasMany(Chat, { foreignKey: 'usuario_id' });
+Chat.belongsTo(Negocio, { foreignKey: 'negocio_id' });
+Negocio.hasMany(Chat, { foreignKey: 'negocio_id' });
 
 // Relación Negocio
-Negocio.belongsTo(Usuario, { as: 'propietario', foreignKey: 'usuarioId' });
-Usuario.hasMany(Negocio, { foreignKey: 'usuarioId' });
+Negocio.belongsTo(Usuario, { as: 'usuario', foreignKey: 'usuario_id' });
+Usuario.hasMany(Negocio, { foreignKey: 'usuario_id' });
 
 // Relación Notificación
-Notificaciones.belongsTo(Usuario, { foreignKey: 'usuarioId' });
-Usuario.hasMany(Notificaciones, { foreignKey: 'usuarioId' });
+Notificaciones.belongsTo(Usuario, { foreignKey: 'usuario_id' });
+Usuario.hasMany(Notificaciones, { foreignKey: 'usuario_id' });
 
 // Relación Pago
-Pago.belongsTo(Pedido, { foreignKey: 'pedidoId' });
-Pedido.hasOne(Pago, { foreignKey: 'pedidoId' });
+Pago.belongsTo(Pedido, { foreignKey: 'pedido_id' });
+Pedido.hasOne(Pago, { foreignKey: 'pedido_id' });
 
 // Relación Pedido
-Pedido.belongsTo(Usuario, { foreignKey: 'usuarioId' });
-Usuario.hasMany(Pedido, { foreignKey: 'usuarioId' });
+Pedido.belongsTo(Usuario, { foreignKey: {
+  name: 'usuario_id',
+  allowNull: false // nunca se puede crear un Producto sin un Negocio asociado 
+  }});
+Usuario.hasMany(Pedido, { foreignKey: 'usuario_id' });
 
 // Relación Producto
-Producto.belongsTo(Negocio, { foreignKey: 'negocioId' });
-Negocio.hasMany(Producto, { foreignKey: 'negocioId' });
+Producto.belongsTo(Negocio, { foreignKey: {
+  name: 'negocio_id',
+  allowNull: false // nunca se puede crear un Producto sin un Negocio asociado
+} });
+Negocio.hasMany(Producto, { foreignKey: 'negocio_id' });
 
 // Relación Reseña
-Reseña.belongsTo(Usuario, { foreignKey: 'usuarioId' });
-Usuario.hasMany(Reseña, { foreignKey: 'usuarioId' });
-Reseña.belongsTo(Producto, { foreignKey: 'productoId' });
-Producto.hasMany(Reseña, { foreignKey: 'productoId' });
+Reseña.belongsTo(Usuario, { foreignKey: 'usuario_id' });
+Usuario.hasMany(Reseña, { foreignKey: 'usuario_id' });
+Reseña.belongsTo(Producto, { foreignKey: 'producto_id' });
+Producto.hasMany(Reseña, { foreignKey: 'producto_id' });
 
 // Relaciones Carrito
-Carrito.belongsTo(Usuario, { foreignKey: 'usuarioId' });
-Usuario.hasMany(Carrito, { foreignKey: 'usuarioId' });
+Carrito.belongsTo(Usuario, { foreignKey: 'usuario_id' });
+Usuario.hasMany(Carrito, { foreignKey: 'usuario_id' });
 
-Carrito_Producto.belongsTo(Carrito, { foreignKey: 'carritoId' });
-Carrito.hasMany(Carrito_Producto, { foreignKey: 'carritoId' });
+Carrito_Producto.belongsTo(Carrito, { foreignKey: 'carrito_id' });
+Carrito.hasMany(Carrito_Producto, { foreignKey: 'carrito_id' });
 
-Carrito_Producto.belongsTo(Producto, { foreignKey: 'productoId' });
-Producto.hasMany(Carrito_Producto, { foreignKey: 'productoId' });
+Carrito_Producto.belongsTo(Producto, { foreignKey: 'producto_id' });
+Producto.hasMany(Carrito_Producto, { foreignKey: 'producto_id' });
 
 // Exporta la conexión y los modelos
 module.exports = {

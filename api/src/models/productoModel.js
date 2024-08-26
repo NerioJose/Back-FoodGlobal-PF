@@ -1,3 +1,4 @@
+// src/models/producto.js
 const { DataTypes } = require('sequelize');
 
 module.exports = (sequelize) => {
@@ -19,6 +20,9 @@ module.exports = (sequelize) => {
       type: DataTypes.FLOAT,
       allowNull: false,
     },
+    imagen: { // Agregamos la nueva columna
+      type: DataTypes.STRING,
+      allowNull: true, // Permitir nulos al principio
+    },
   });
 };
-
