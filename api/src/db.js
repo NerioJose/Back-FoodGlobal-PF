@@ -44,6 +44,21 @@ Negocio.hasMany(Chat, { foreignKey: 'negocio_id' });
 Negocio.belongsTo(Usuario, { as: 'usuario', foreignKey: 'usuario_id' });
 Usuario.hasMany(Negocio, { foreignKey: 'usuario_id' });
 
+// **NUEVO**: Relación entre Negocio y Producto
+Negocio.hasMany(Producto, {
+  foreignKey: 'negocio_id',
+  sourceKey: 'id',
+});
+// Explicación: Un negocio puede tener múltiples productos asociados. La clave foránea `negocio_id` en `Producto` referencia la columna `id` en `Negocio`.
+
+Producto.belongsTo(Negocio, {
+  foreignKey: 'negocio_id',
+  targetKey: 'id',
+});
+// Explicación: Cada producto pertenece a un negocio. La clave foránea `negocio_id` en `Producto` apunta a la columna `id` en `Negocio`.
+
+
+
 // Relación Notificación
 Notificaciones.belongsTo(Usuario, { foreignKey: 'usuario_id' });
 Usuario.hasMany(Notificaciones, { foreignKey: 'usuario_id' });
@@ -53,17 +68,21 @@ Pago.belongsTo(Pedido, { foreignKey: 'pedido_id' });
 Pedido.hasOne(Pago, { foreignKey: 'pedido_id' });
 
 // Relación Pedido
-Pedido.belongsTo(Usuario, { foreignKey: {
-  name: 'usuario_id',
-  allowNull: false // la columna usuario_id no puede ser nula (NULL), lo que asegura que cada Pedido debe estar asociado a un Usuario. No es posible crear un Pedido sin un Usuario relacionado.
-  }});
+Pedido.belongsTo(Usuario, {
+  foreignKey: {
+    name: 'usuario_id',
+    allowNull: false // la columna usuario_id no puede ser nula (NULL), lo que asegura que cada Pedido debe estar asociado a un Usuario. No es posible crear un Pedido sin un Usuario relacionado.
+  }
+});
 Usuario.hasMany(Pedido, { foreignKey: 'usuario_id' });
 
 // Relación Producto
-Producto.belongsTo(Negocio, { foreignKey: {
-  name: 'negocio_id',
-  allowNull: false // nunca se puede crear un Producto sin un Negocio asociado
-} });
+Producto.belongsTo(Negocio, {
+  foreignKey: {
+    name: 'negocio_id',
+    allowNull: false // nunca se puede crear un Producto sin un Negocio asociado
+  }
+});
 Negocio.hasMany(Producto, { foreignKey: 'negocio_id' });
 
 // Relación Reseña
@@ -84,6 +103,6 @@ Producto.hasMany(Carrito_Producto, { foreignKey: 'producto_id' });
 
 // Exporta la conexión y los modelos
 module.exports = {
-  ...sequelize.models, 
+  ...sequelize.models,
   conn: sequelize,  // Asegúrate de que conn esté exportado correctamente
 };

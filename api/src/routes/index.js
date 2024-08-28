@@ -9,6 +9,8 @@ const getDetailProductos = require('../controllers/getControllers/getDetailProdu
 const getNegocios = require('../controllers/getControllers/getNegocios');
 const getProductos = require('../controllers/getControllers/getProductos');
 const getUsuarios = require('../controllers/getControllers/getUsuarios');
+const getProductosPorNegocio = require('../controllers/getControllers/getProductosPorNegocio'); // Importa el controlador de productos por negocio
+
 
 //Post Controllers
 const postNegocios = require('../controllers/postControllers/postNegocios');
@@ -35,6 +37,9 @@ routes.get('/productos/:id', getDetailProductos); // Obtener detalles de un prod
 routes.get('/usuarios', getUsuarios); // Obtener la lista de usuarios
 // Obtener usuarios por nombre (nuevo)
 // routes.get('/usuarios/search', getUsuariosByNombre); // Nueva ruta para buscar usuarios por nombre
+
+// Nueva ruta para obtener productos por negocio
+routes.get('/negocios/:negocioId/productos', getProductosPorNegocio); // Obtener todos los productos de un negocio específico
 
 routes.post('/negocios', postNegocios);// Crear Negocios
 routes.post('/productos', postProductos);//Crear Productos
