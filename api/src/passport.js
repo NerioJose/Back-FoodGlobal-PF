@@ -1,9 +1,9 @@
-// El archivo passport.js se encargará de configurar las estrategias de autenticación
-// manejar la autenticación con Google y GitHub
+require('dotenv').config(); // Asegúrate de que dotenv esté configurado
 
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const GitHubStrategy = require('passport-github2').Strategy;
+
 
 passport.use(new GoogleStrategy({
   clientID: process.env.GOOGLE_CLIENT_ID,
