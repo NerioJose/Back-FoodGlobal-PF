@@ -1,8 +1,13 @@
 // Importa el archivo `db.json` que contiene los productos hardcodeados.
 const dbProducts = require("../../../db.json");
 
+<<<<<<< HEAD
     // Importa el modelo `Producto` y la conexión `conn` desde el archivo de configuración de la base de datos (`db.js`).
     const { Producto } = require("../../db");
+=======
+// Importa el modelo `Producto` y la conexión `conn` desde el archivo de configuración de la base de datos (`db.js`).
+const { Producto } = require("../../models/productoModel");
+>>>>>>> nerio
 const {conn} = require("../../db")
 // Define una función asincrónica llamada `initialLoad`, que se encargará de cargar los productos en la base de datos si es necesario.
 
