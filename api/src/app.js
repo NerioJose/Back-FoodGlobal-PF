@@ -28,8 +28,8 @@ cloudinary.config({
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
-    folder: 'food global',  // Cambia por el nombre de la carpeta que deseas usar en Cloudinary
-    allowed_formats: ['jpg', 'png'], // Formatos permitidos
+    folder: 'foodglobal',  // Cambia por el nombre de la carpeta que deseas usar en Cloudinary
+    allowed_formats: ['jpg', 'web', 'png'], // Formatos permitidos
   },
 });
 
