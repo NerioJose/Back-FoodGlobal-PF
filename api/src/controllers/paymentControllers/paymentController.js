@@ -3,10 +3,18 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const paymentIntent = async (req, res) => {
   const { amount } = req.body;
 
+  // Convertir el monto de dólares a centavos
+  const amountInCents = Math.round(amount * 100);
+
   try {
+    if (amountInCents < 50) {
+      return res.status(400).send({ error: 'El monto debe ser al menos $0.50 USD.' });
+    }
+
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: amount, // El monto debe estar en centavos
+      amount: amountInCents, // El monto en centavos
       currency: 'usd',
+      payment_method_types: ['card'], // Especifica el método de pago
     });
 
     res.send({
