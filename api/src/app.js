@@ -29,7 +29,7 @@ const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
     folder: 'foodglobal',  // Cambia por el nombre de la carpeta que deseas usar en Cloudinary
-    allowed_formats: ['jpg', 'web', 'png'], // Formatos permitidos
+    allowed_formats: ['jpg', 'webp', 'png'], // Formatos permitidos
   },
 });
 
@@ -55,20 +55,7 @@ server.use(session({ secret: 'secret', resave: true, saveUninitialized: true }))
 server.use(passport.initialize());
 server.use(passport.session());
 
-server.post('/upload', upload.single('imagen'), (req, res) => {
-  try {
-    // Verifica si req.file está presente
-    if (!req.file) {
-      return res.status(400).send('No se subió ningún archivo.');
-    }
-    
-    // Devuelve la URL pública de la imagen subida a Cloudinary
-    res.json({ url: req.file.path });
-  } catch (error) {
-    console.error('Error al subir el archivo:', error);
-    res.status(500).send('Error subiendo el archivo.');
-  }
-});
+
 server.use('/', routes);
 server.use('/', authRoutes); // Asegúrate de incluir las rutas de autenticación
 

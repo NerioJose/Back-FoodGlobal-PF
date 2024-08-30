@@ -1,15 +1,11 @@
-// Importa el archivo `db.json` que contiene los productos hardcodeados.
+// Importa el archivo db.json que contiene los productos hardcodeados.
 const dbProducts = require("../../../db.json");
 
-<<<<<<< HEAD
-    // Importa el modelo `Producto` y la conexión `conn` desde el archivo de configuración de la base de datos (`db.js`).
+
+    // Importa el modelo Producto y la conexión conn desde el archivo de configuración de la base de datos (db.js).
     const { Producto } = require("../../db");
-=======
-// Importa el modelo `Producto` y la conexión `conn` desde el archivo de configuración de la base de datos (`db.js`).
-const { Producto } = require("../../models/productoModel");
->>>>>>> nerio
-const {conn} = require("../../db")
-// Define una función asincrónica llamada `initialLoad`, que se encargará de cargar los productos en la base de datos si es necesario.
+    const {conn} = require("../../db");
+// Define una función asincrónica llamada initialLoad, que se encargará de cargar los productos en la base de datos si es necesario.
 
 const initialLoad = async () => {
     try {
@@ -18,7 +14,8 @@ const initialLoad = async () => {
 
         console.log("Consultando productos existentes...");
         const productosDb = await Producto.findAll();
-        console.log(`Productos en la base de datos: ${productosDb.length}`);
+        
+
 
         if (productosDb.length < dbProducts.length) {
             console.log("Cargando productos desde el archivo JSON...");

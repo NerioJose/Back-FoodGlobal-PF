@@ -18,6 +18,8 @@ const postNegocios = require('../controllers/postControllers/postNegocios');
 const postProductos = require('../controllers/postControllers/postProductos');
 const postUsuarios = require('../controllers/postControllers/postUsuarios');
 const paymentIntent = require('../controllers/paymentControllers/paymentController');
+const loginUsuario = require('../controllers/postControllers/loginUsuario');
+const deleteProducto = require('../controllers/deleteControllers/deleteProducto');
 
 
 // Configurar las rutas
@@ -34,5 +36,9 @@ routes.post('/negocios', postNegocios);// Crear Negocios
 routes.post('/productos', postProductos);//Crear Productos
 routes.post('/usuarios', postUsuarios);//Crear usuarios
 routes.post('/create-payment-intent', paymentIntent);//Ruta para la pasarela stripe
+routes.post('/login', loginUsuario )
+
+routes.delete('/:id', deleteProducto);
+
 
 module.exports = routes;
