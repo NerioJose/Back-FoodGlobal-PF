@@ -1,10 +1,13 @@
-//auth.routes.js para maneja las rutas de autenticación
-
 const express = require('express');
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
 
 const router = express.Router();
+
+// Middleware para manejar la creación de tokens JWT
+const generateToken = (user) => {
+  return jwt.sign({ id: user.id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '1h' });
+};
 
 // Google OAuth
 router.get('/auth/google',
@@ -14,22 +17,25 @@ router.get('/auth/google',
 router.get('/auth/google/callback',
   passport.authenticate('google', { failureRedirect: '/login' }),
   (req, res) => {
-    const token = jwt.sign({ id: req.user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-    res.redirect(`/login?token=${token}`);
+    const token = generateToken(req.user);
+    console.log(token);
+    // Redirige a una página segura o al frontend con el token
+    res.redirect(`/welcome?token=${token}`);  // Reemplaza `/welcome` con la ruta de tu frontend que maneje el token
   }
 );
 
-// GitHub OAuth
-router.get('/auth/github',
-  passport.authenticate('github', { scope: ['user:email'] })
-);
+ // GitHub OAuth
+// router.get('/auth/github',
+//   passport.authenticate('github', { scope: ['user:email'] })
+// );
 
-router.get('/auth/github/callback',
-  passport.authenticate('github', { failureRedirect: '/login' }),
-  (req, res) => {
-    const token = jwt.sign({ id: req.user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-    res.redirect(`/login?token=${token}`);
-  }
-);
+// router.get('/auth/github/callback',
+//   passport.authenticate('github', { failureRedirect: '/login' }),
+//   (req, res) => {
+//     const token = generateToken(req.user);
+//     // Redirige a una página segura o al frontend con el token
+//     res.redirect(`/welcome?token=${token}`);  // Reemplaza `/welcome` con la ruta de tu frontend que maneje el token
+//   }
+// );
 
 module.exports = router;
