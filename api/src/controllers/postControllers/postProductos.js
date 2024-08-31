@@ -4,10 +4,10 @@ const fs = require('fs');
 
 const postProductos = async (req, res) => {
   try {
-    const { nombre, descripcion, precio, negocio_id } = req.body;
+    const { nombre, descripcion, precio, negocio_id, categoria, stock } = req.body;
     let imagen = req.file ? req.file.path : req.body.imagen;
 
-    if (!nombre || !descripcion || !precio || !negocio_id) {
+    if (!nombre || !descripcion || !precio || !negocio_id || !categoria || !stock) {
       return res.status(400).json({ message: 'Faltan datos obligatorios.' });
     }
 
@@ -38,7 +38,9 @@ const postProductos = async (req, res) => {
       descripcion,
       precio,
       negocio_id,
-      imagen
+      imagen,
+      categoria,
+      stock
     });
 
     return res.status(201).json(nuevoProducto);
