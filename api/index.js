@@ -23,7 +23,7 @@ const initialLoad = require('./src/controllers/getControllers/productController.
 
 // Sincronizar todos los modelos y luego iniciar el servidor
 conn.sync({ alter: true }).then( async() => {
-  await initialLoad();  // Llamar a la función initialLoad para cargar los productos
+  // await initialLoad();  // Llamar a la función initialLoad para cargar los productos
 
    // Iniciar el servidor en el puerto 3001
   server.listen(3001, () => {

@@ -1,36 +1,47 @@
-// El archivo passport.js se encargará de configurar las estrategias de autenticación
-// manejar la autenticación con Google y GitHub
-
+// passport.js
+const { Usuario } = require('./db')
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
-const GitHubStrategy = require('passport-github2').Strategy;
+
+
 
 passport.use(new GoogleStrategy({
   clientID: process.env.GOOGLE_CLIENT_ID,
   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-  callbackURL: "/auth/google/callback"
+  callbackURL: "http://localhost:3001/auth/google/callback" // Debe coincidir con el URI de redireccionamiento autorizado
 },
-function(accessToken, refreshToken, profile, done) {
-  // Aquí es donde buscarías o crearías el usuario en la base de datos
-  return done(null, profile);
-}
-));
+  async (accessToken, refreshToken, profile, done) => {
+    console.log(profile);
+    // Aquí puedes buscar o crear el usuario en tu base de datos
+    try {
+      let user = await Usuario.findOne({ where: { googleID: profile.id } });
+      console.log({ user });
 
-passport.use(new GitHubStrategy({
-  clientID: process.env.GITHUB_CLIENT_ID,
-  clientSecret: process.env.GITHUB_CLIENT_SECRET,
-  callbackURL: "/auth/github/callback"
-},
-function(accessToken, refreshToken, profile, done) {
-  // Aquí es donde buscarías o crearías el usuario en la base de datos
-  return done(null, profile);
-}
-));
+      if (!user) {
+        user = await Usuario.create({
+          googleID: profile.id,
+          nombre: profile.name.givenName,
+          email: profile._json.email,
+          apellido: profile.name.familyName,
+          rol: "admin"
+        })
 
-passport.serializeUser(function(user, done) {
-  done(null, user);
+      }
+      done(null, user);
+    } catch (err) {
+      console.log(err);
+
+      done(err, null);
+    }
+  }));
+
+
+
+passport.serializeUser((user, done) => {
+  done(null, user.id);
 });
 
-passport.deserializeUser(function(obj, done) {
-  done(null, obj);
+passport.deserializeUser(async (id, done) => {
+  const user = await Usuario.findByPk(id);
+  done(null, user);
 });
