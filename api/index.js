@@ -19,12 +19,10 @@
 //     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 const server = require('./src/app.js');
 const { conn } = require('./src/db.js'); // Asegúrate de que la ruta sea correcta
-const initialLoad = require('./src/controllers/getControllers/productController.js');
 
 // Sincronizar todos los modelos y luego iniciar el servidor
 conn.sync({ alter: true }).then( async() => {
-  await initialLoad();  // Llamar a la función initialLoad para cargar los productos
-
+  
    // Iniciar el servidor en el puerto 3001
   server.listen(3001, () => {
     console.log('listening at 3001'); 
