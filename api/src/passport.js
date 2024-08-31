@@ -1,7 +1,13 @@
+
 // passport.js
 const { Usuario } = require('./db')
+
+require('dotenv').config(); // Asegúrate de que dotenv esté configurado
+
+
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
+
 
 
 

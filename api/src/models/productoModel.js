@@ -23,6 +23,14 @@ module.exports = (sequelize) => {
       type: DataTypes.STRING,             // Cadena de texto para almacenar la URL de la imagen.
       allowNull: true,                    // Este campo es opcional, puede ser nulo.
     },
+    categoria: {
+      type: DataTypes.STRING,               // Campo de tipo string para la categoria del producto.
+      allowNull: false,                   
+    },
+    stock: {
+      type: DataTypes.INTEGER,              // Tipo integer para mostrar el stock.
+      allowNull: false,                   
+    },
     // Definición de la columna negocio_id como clave foránea apuntando al modelo Negocio.
     negocio_id: {
       type: DataTypes.UUID,               // Define el tipo de dato como UUID para relacionarlo con el negocio asociado.
