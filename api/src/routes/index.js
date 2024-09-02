@@ -10,7 +10,7 @@ const getProductos = require('../controllers/getControllers/getProductos');
 const getUsuarios = require('../controllers/getControllers/getUsuarios');
 const getProductosPorNegocio = require('../controllers/getControllers/getProductosPorNegocio'); 
 
-const welcomeController = require('../controllers/getControllers/welcomeController'); // Importar el controlador de welcome
+
 
 // Post Controllers
 const postNegocios = require('../controllers/postControllers/postNegocios');
@@ -27,8 +27,6 @@ const auth = require('../middleware/authentication');
 
 // Configurar las rutas
 
-// Nueva ruta para /welcome
-routes.get('/welcome', welcomeController);
 
 routes.get('/negocios', getNegocios); // Obtener la lista de negocios
 routes.get('/negocios/:id', getDetailNegocios); // Obtener detalles de un negocio específico
