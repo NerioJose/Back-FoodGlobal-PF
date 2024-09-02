@@ -1,11 +1,9 @@
 const { Producto } = require('../../db');
 const cloudinary = require('cloudinary').v2;
-const fs = require('fs');
 
 const postProductos = async (req, res) => {
   try {
-    const { nombre, descripcion, precio, negocio_id, categoria, stock } = req.body;
-    let imagen = req.file ? req.file.path : req.body.imagen;
+    const { nombre, descripcion, precio, negocio_id, categoria, stock, imagen } = req.body;
 
     if (!nombre || !descripcion || !precio || !negocio_id || !categoria || !stock) {
       return res.status(400).json({ message: 'Faltan datos obligatorios.' });
@@ -20,16 +18,13 @@ const postProductos = async (req, res) => {
       return res.status(400).json({ message: 'El producto ya existe.' });
     }
 
-    // Subir la imagen a Cloudinary si es una ruta local
-    if (imagen && !req.file) { // Si se proporcionó una ruta local
-      if (fs.existsSync(imagen)) { // Verificar si el archivo existe
-        const uploadResult = await cloudinary.uploader.upload(imagen, {
-          folder: 'foodglobal'
-        });
-        imagen = uploadResult.secure_url;
-      } else {
-        return res.status(400).json({ message: 'El archivo no existe.' });
-      }
+    // Validar si la URL de la imagen es válida
+    let imagenURL = imagen;
+
+    if (imagen && !imagen.startsWith('http')) {
+
+    } else {
+      imagenURL = imagen;
     }
 
     // Crear el nuevo producto en la base de datos
@@ -38,7 +33,7 @@ const postProductos = async (req, res) => {
       descripcion,
       precio,
       negocio_id,
-      imagen,
+      imagen: imagenURL,
       categoria,
       stock
     });
@@ -51,5 +46,3 @@ const postProductos = async (req, res) => {
 };
 
 module.exports = postProductos;
-
-
