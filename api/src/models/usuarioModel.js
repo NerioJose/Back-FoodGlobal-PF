@@ -41,7 +41,7 @@ module.exports = (sequelize) => {
     },
   }, {
     paranoid: true, // Habilita el borrado lógico (registro de eliminaciones)
-    timestamps: false, // Deshabilita los timestamps (createdAt y updatedAt)
+    timestamps: true, // Deshabilita los timestamps (createdAt y updatedAt)
   });
 
   // Método para comparar la contraseña proporcionada con la almacenada en la base de datos

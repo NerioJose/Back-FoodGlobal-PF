@@ -20,7 +20,6 @@ const postUsuarios = require('../controllers/postControllers/postUsuarios');
 const paymentIntent = require('../controllers/paymentControllers/paymentController');
 const loginUsuario = require('../controllers/postControllers/loginUsuario');
 const deleteProducto = require('../controllers/deleteControllers/deleteProducto');
-const deleteUsuario = require('../controllers/deleteControllers/deleteUsuario');
 
 
 // Configurar las rutas
@@ -40,8 +39,7 @@ routes.post('/create-payment-intent', paymentIntent);//Ruta para la pasarela str
 routes.post('/login', loginUsuario )
 
 routes.delete('/:id', deleteProducto);
-routes.delete('/usuarios/:id', deleteUsuario); 
 
-module.exports = routes
 
+module.exports = routes;
 
