@@ -11,10 +11,10 @@ module.exports = (sequelize) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
-//     imagen: {
-//       type: DataTypes.STRING,
-//       allowNull: true,
-// },
+    imagen: {
+      type: DataTypes.STRING,             // Cadena de texto para almacenar la URL de la imagen.
+      allowNull: true,                    // Este campo es opcional, puede ser nulo.
+    },
     descripcion: {
       type: DataTypes.STRING,
       allowNull: true,
