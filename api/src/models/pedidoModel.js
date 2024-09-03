@@ -23,5 +23,8 @@ module.exports = (sequelize) => {
       type: DataTypes.DECIMAL,
       allowNull: false,
     },
+  }, {
+    paranoid: true, // Habilita el borrado lógico (registro de eliminaciones)
+    timestamps: true, // Deshabilita los timestamps (createdAt y updatedAt)
   });
 };

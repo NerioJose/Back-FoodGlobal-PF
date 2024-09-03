@@ -11,10 +11,10 @@ module.exports = (sequelize) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
-//     imagen: {
-//       type: DataTypes.STRING,
-//       allowNull: true,
-// },
+    imagen: {
+      type: DataTypes.STRING,
+      allowNull: true,
+},
     descripcion: {
       type: DataTypes.STRING,
       allowNull: true,
@@ -27,5 +27,8 @@ module.exports = (sequelize) => {
         key: 'id',
       },
     },
+  }, {
+    paranoid: true, // Habilita el borrado lógico (registro de eliminaciones)
+    timestamps: true, // Deshabilita los timestamps (createdAt y updatedAt)
   });
 };

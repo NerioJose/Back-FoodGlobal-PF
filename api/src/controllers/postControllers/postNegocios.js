@@ -1,3 +1,5 @@
+const fs = require('fs');
+const cloudinary = require('cloudinary').v2; // Importa y configura Cloudinary
 const { Negocio, Usuario } = require('../../db');
 
 // Expresiones regulares para validaciones
@@ -6,7 +8,8 @@ const descripcionRegex = /^.{10,1000}$/; // Descripción entre 10 y 1000 caracte
 
 const postNegocios = async (req, res) => {
   try {
-    const { nombre, descripcion, usuario_id } = req.body;
+    const { nombre, descripcion, imagen, usuario_id } = req.body;
+    let imagenUrl = imagen; // Usa `let` aquí para permitir la reasignación
 
     // Validaciones con expresiones regulares
     if (!nombreRegex.test(nombre)) {
@@ -27,18 +30,39 @@ const postNegocios = async (req, res) => {
       return res.status(400).json({ message: 'El usuario no existe.' });
     }
 
+    // Subir la imagen a Cloudinary si es una ruta local
+    if (imagen && !/^https?:\/\//i.test(imagen)) { // Si la imagen no es una URL remota
+      console.log(`Verificando archivo en: ${imagen}`);
+      if (fs.existsSync(imagen)) { // Verificar si el archivo existe
+        const uploadResult = await cloudinary.uploader.upload(imagen, {
+          folder: 'foodglobal'
+        });
+        imagenUrl = uploadResult.secure_url; // Reasignar `imagenUrl` con la URL de Cloudinary
+      } else {
+        return res.status(400).json({ message: 'El archivo no existe en la ruta especificada.' });
+      }
+    } else if (imagen) { // Si la imagen es una URL remota
+      // Subir imagen desde URL remota a Cloudinary
+      const uploadResult = await cloudinary.uploader.upload(imagen, {
+        folder: 'foodglobal'
+      });
+      imagenUrl = uploadResult.secure_url; // Reasignar `imagenUrl` con la URL de Cloudinary
+    }
+
     // Crear el nuevo negocio
     const nuevoNegocio = await Negocio.create({
       nombre,
       descripcion,
+      imagen: imagenUrl, // Asegúrate de que se incluye la imagen
       usuario_id,
     });
 
     return res.status(201).json(nuevoNegocio);
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({ message: 'Ocurrió un error al crear el negocio.' });
+    console.error('Error al crear el negocio:', error);
+    return res.status(500).json({ message: 'Ocurrió un error al crear el negocio.', error: error.message });
   }
 };
 
 module.exports = postNegocios;
+
