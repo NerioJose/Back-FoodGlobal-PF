@@ -12,9 +12,9 @@ module.exports = (sequelize) => {
       allowNull: false,
     },
     imagen: {
-      type: DataTypes.STRING,             // Cadena de texto para almacenar la URL de la imagen.
-      allowNull: true,                    // Este campo es opcional, puede ser nulo.
-    },
+      type: DataTypes.STRING,
+      allowNull: true,
+},
     descripcion: {
       type: DataTypes.STRING,
       allowNull: true,
@@ -27,5 +27,8 @@ module.exports = (sequelize) => {
         key: 'id',
       },
     },
+  }, {
+    paranoid: true, // Habilita el borrado lógico (registro de eliminaciones)
+    timestamps: true, // Deshabilita los timestamps (createdAt y updatedAt)
   });
 };
