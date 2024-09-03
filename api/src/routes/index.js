@@ -1,5 +1,3 @@
-
-
 const express = require('express');
 const routes = express.Router();
 const auth = require('../middleware/authentication'); // Asegúrate de que la ruta sea correcta
@@ -54,4 +52,5 @@ routes.post('/restore/pagos/:id', (req, res) => recoverEntity(Pago, req, res)); 
 routes.post('/restore/negocios/:id', (req, res) => recoverEntity(Negocio, req, res)); // Ruta para restaurar negocios
 
 module.exports = routes;
+
 
