@@ -1,3 +1,5 @@
+const fs = require('fs');
+const cloudinary = require('cloudinary').v2; // Importa y configura Cloudinary
 const { Negocio, Usuario } = require('../../db');
 
 // Expresiones regulares para validaciones
@@ -6,7 +8,8 @@ const descripcionRegex = /^.{10,1000}$/; // Descripción entre 10 y 1000 caracte
 
 const postNegocios = async (req, res) => {
   try {
-    const { nombre, descripcion, usuario_id } = req.body;
+    const { nombre, descripcion, imagen: imagenLocal, usuario_id } = req.body;
+    let imagen = imagenLocal; // Usa let aquí para permitir la reasignación
 
     // Validaciones con expresiones regulares
     if (!nombreRegex.test(nombre)) {
@@ -27,17 +30,30 @@ const postNegocios = async (req, res) => {
       return res.status(400).json({ message: 'El usuario no existe.' });
     }
 
+    // Subir la imagen a Cloudinary
+    try {
+      const uploadResult = await cloudinary.uploader.upload(imagen, {
+        folder: 'foodglobal',
+        resource_type: 'image',
+      });
+      imagen = uploadResult.secure_url; // Siempre usar la URL de Cloudinary
+    } catch (error) {
+      console.error('Error al subir la imagen a Cloudinary:', error);
+      return res.status(500).json({ message: 'Ocurrió un error al subir la imagen.', error: error.message });
+    }
+
     // Crear el nuevo negocio
     const nuevoNegocio = await Negocio.create({
       nombre,
       descripcion,
+      imagen, // Guardar la URL de Cloudinary
       usuario_id,
     });
 
     return res.status(201).json(nuevoNegocio);
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({ message: 'Ocurrió un error al crear el negocio.' });
+    console.error('Error al crear el negocio:', error);
+    return res.status(500).json({ message: 'Ocurrió un error al crear el negocio.', error: error.message });
   }
 };
 
