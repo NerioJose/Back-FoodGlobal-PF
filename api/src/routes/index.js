@@ -1,10 +1,7 @@
 const express = require('express');
 const routes = express.Router();
-const auth = require('../middleware/authentication'); // Asegúrate de que la ruta sea correcta
 
-const { Usuario, Producto, Pedido_Producto, Pedido, Pago, Negocio } = require('../db'); // Ajusta la ruta si es necesario
 
-const recoverEntity = require('../controllers/common/recoverEntity');
 // Importar todos los controladores 
 
 //Get Controllers
@@ -15,6 +12,7 @@ const getProductos = require('../controllers/getControllers/getProductos');
 const getUsuarios = require('../controllers/getControllers/getUsuarios');
 const getProductosPorNegocio = require('../controllers/getControllers/getProductosPorNegocio'); // Importa el controlador de productos por negocio
 
+
 //Post Controllers
 const postNegocios = require('../controllers/postControllers/postNegocios');
 const postProductos = require('../controllers/postControllers/postProductos');
@@ -22,12 +20,14 @@ const postUsuarios = require('../controllers/postControllers/postUsuarios');
 const paymentIntent = require('../controllers/paymentControllers/paymentController');
 const loginUsuario = require('../controllers/postControllers/loginUsuario');
 const deleteProducto = require('../controllers/deleteControllers/deleteProducto');
+
 const deleteUsuario = require('../controllers/deleteControllers/deleteUsuario');
  
 // Block Controllers
 const bloquearNegocio = require('../controllers/blockcontrollers/blockNegocio'); // Importa el controlador de bloqueo de negocio
 const bloquearUsuario = require('../controllers/blockcontrollers/blockUsuario');
 const bloquearProducto = require('../controllers/blockcontrollers/blockProducto');
+
 
 // Configurar las rutas
 routes.get('/negocios', getNegocios); // Obtener la lista de negocios
@@ -46,6 +46,7 @@ routes.post('/create-payment-intent', paymentIntent); // Ruta para la pasarela s
 routes.post('/login', loginUsuario);
 
 routes.delete('/:id', deleteProducto);
+
 routes.delete('/usuarios/:id', deleteUsuario);
 
 // Rutas para recuperación de entidades sin autenticación
@@ -55,6 +56,7 @@ routes.post('/restore/pedidos/:id', (req, res) => recoverEntity(Pedido, req, res
 routes.post('/restore/pedido-producto/:id', (req, res) => recoverEntity(Pedido_Producto, req, res)); // Ruta para restaurar PedidoProducto
 routes.post('/restore/pagos/:id', (req, res) => recoverEntity(Pago, req, res)); // Ruta para restaurar pagos
 routes.post('/restore/negocios/:id', (req, res) => recoverEntity(Negocio, req, res)); // Ruta para restaurar negocios
+
 
 // Nueva ruta para bloquear negocio
 routes.put('/negocios/:id/bloquear', bloquearNegocio); // Ruta para bloquear negocio
