@@ -1,4 +1,4 @@
-const { Negocio } = require('../../db'); // Importa el modelo Negocio
+const { Negocio } = require('../../db'); 
 
 const bloquearNegocio = async (req, res) => {
   try {
