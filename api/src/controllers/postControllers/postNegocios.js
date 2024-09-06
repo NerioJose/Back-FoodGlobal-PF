@@ -1,19 +1,20 @@
 const { Usuario } = require('../../db'); 
 
 // Expresiones regulares para validaciones
-const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Valida que el email tenga un formato válido (ej. usuario@dominio.com)
-const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/; // Valida que la contraseña tenga entre 6 y 20 caracteres, con al menos un número, una letra mayúscula, y una letra minúscula
-const rolRegex = /^(admin|usuario|socio)$/; // Valida que el rol sea 'admin', 'usuario' o 'socio'
-const nombreRegex = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/; // Valida que el nombre solo contenga letras (incluyendo acentos) y espacios
 
-const postUsuarios = async (req, res) => {
-  const { nombre, apellido, imagen, email, password, rol } = req.body; // Extrae los datos enviados en la solicitud
+const nombreRegex = /^[A-Za-z0-9\s]{3,}$/; // Nombre con al menos 3 caracteres, puede contener letras, números y espacios
+const descripcionRegex = /^.{10,1000}$/; // Descripción entre 10 y 1000 caracteres
 
-  // Validar nombre
-  if (typeof nombre !== 'string' || nombre.length < 3 || !nombreRegex.test(nombre)) {
-    // Comprueba que el nombre sea una cadena, tenga al menos 3 caracteres y solo contenga letras y espacios
-    return res.status(400).json({ error: 'El nombre debe ser una cadena de al menos 3 letras.' }); // Devuelve un error 400 si la validación falla
-  }
+const postNegocios = async (req, res) => {
+  try {
+    const { nombre, descripcion, imagen, usuario_id, status } = req.body;
+    let imagenUrl = imagen; // Usa let aquí para permitir la reasignación
+
+    // Validaciones con expresiones regulares
+    if (!nombreRegex.test(nombre)) {
+      return res.status(400).json({ message: 'Nombre inválido. Debe tener al menos 3 caracteres y solo contener letras, números y espacios.' });
+    }
+
 
   // Validar email
   if (typeof email !== 'string' || !emailRegex.test(email)) {
@@ -33,17 +34,40 @@ const postUsuarios = async (req, res) => {
     return res.status(400).json({ error: 'El rol debe ser uno de los siguientes: "admin", "usuario", o "socio".' }); // Devuelve un error 400 si la validación falla
   }
 
-  try {
-    // Verificar si el usuario ya existe
-    const usuarioExistente = await Usuario.findOne({ where: { email } });
-    if (usuarioExistente) {
-      // Si ya existe un usuario con el mismo email, devuelve un error 400
-      return res.status(400).json({ error: 'Ya existe un usuario con ese email.' });
+
+    // Subir la imagen a Cloudinary si es una ruta local
+    if (imagen && !/^https?:\/\//i.test(imagen)) { // Si la imagen no es una URL remota
+      console.log(`Verificando archivo en: ${imagen}`);
+      if (fs.existsSync(imagen)) { // Verificar si el archivo existe
+        const uploadResult = await cloudinary.uploader.upload(imagen, {
+          folder: 'foodglobal'
+        });
+        imagenUrl = uploadResult.secure_url; // Reasignar imagenUrl con la URL de Cloudinary
+      } else {
+        return res.status(400).json({ message: 'El archivo no existe en la ruta especificada.' });
+      }
+    } else if (imagen) { // Si la imagen es una URL remota
+      // Subir imagen desde URL remota a Cloudinary
+      const uploadResult = await cloudinary.uploader.upload(imagen, {
+        folder: 'foodglobal'
+      });
+      imagenUrl = uploadResult.secure_url; // Reasignar imagenUrl con la URL de Cloudinary
     }
 
-    // Crear el nuevo usuario
-    const nuevoUsuario = await Usuario.create({ nombre, apellido, imagen, email, password, rol });
-    return res.status(201).json(nuevoUsuario); // Devuelve el nuevo usuario creado con un estado 201 (creado)
+    // Validar el campo status, si no se pasa, asignar por defecto 'activo'
+    const negocioStatus = status || 'activo';
+
+    // Crear el nuevo negocio
+    const nuevoNegocio = await Negocio.create({
+      nombre,
+      descripcion,
+      imagen: imagenUrl, // Asegúrate de que se incluye la imagen
+      usuario_id,
+      status: negocioStatus, // Asignar el status
+    });
+
+    return res.status(201).json(nuevoNegocio);
+
   } catch (error) {
     console.error(error); // Muestra el error en la consola para facilitar la depuración
     return res.status(500).json({ error: 'Error al crear el usuario.' }); // Devuelve un error 500 si algo falla en la creación del usuario
@@ -51,5 +75,7 @@ const postUsuarios = async (req, res) => {
 };
 
 module.exports = postUsuarios; 
+
+
 
 
