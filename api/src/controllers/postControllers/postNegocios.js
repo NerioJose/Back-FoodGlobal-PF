@@ -8,8 +8,8 @@ const descripcionRegex = /^.{10,1000}$/; // Descripción entre 10 y 1000 caracte
 
 const postNegocios = async (req, res) => {
   try {
-    const { nombre, descripcion, imagen, usuario_id } = req.body;
-    let imagenUrl = imagen; // Usa `let` aquí para permitir la reasignación
+    const { nombre, descripcion, imagen, usuario_id, status } = req.body;
+    let imagenUrl = imagen; // Usa let aquí para permitir la reasignación
 
     // Validaciones con expresiones regulares
     if (!nombreRegex.test(nombre)) {
@@ -37,7 +37,7 @@ const postNegocios = async (req, res) => {
         const uploadResult = await cloudinary.uploader.upload(imagen, {
           folder: 'foodglobal'
         });
-        imagenUrl = uploadResult.secure_url; // Reasignar `imagenUrl` con la URL de Cloudinary
+        imagenUrl = uploadResult.secure_url; // Reasignar imagenUrl con la URL de Cloudinary
       } else {
         return res.status(400).json({ message: 'El archivo no existe en la ruta especificada.' });
       }
@@ -46,8 +46,11 @@ const postNegocios = async (req, res) => {
       const uploadResult = await cloudinary.uploader.upload(imagen, {
         folder: 'foodglobal'
       });
-      imagenUrl = uploadResult.secure_url; // Reasignar `imagenUrl` con la URL de Cloudinary
+      imagenUrl = uploadResult.secure_url; // Reasignar imagenUrl con la URL de Cloudinary
     }
+
+    // Validar el campo status, si no se pasa, asignar por defecto 'activo'
+    const negocioStatus = status || 'activo';
 
     // Crear el nuevo negocio
     const nuevoNegocio = await Negocio.create({
@@ -55,6 +58,7 @@ const postNegocios = async (req, res) => {
       descripcion,
       imagen: imagenUrl, // Asegúrate de que se incluye la imagen
       usuario_id,
+      status: negocioStatus, // Asignar el status
     });
 
     return res.status(201).json(nuevoNegocio);
@@ -65,4 +69,6 @@ const postNegocios = async (req, res) => {
 };
 
 module.exports = postNegocios;
+
+
 

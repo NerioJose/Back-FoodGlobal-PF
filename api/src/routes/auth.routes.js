@@ -24,18 +24,5 @@ router.get('/auth/google/callback',
   }
 );
 
- // GitHub OAuth
-// router.get('/auth/github',
-//   passport.authenticate('github', { scope: ['user:email'] })
-// );
-
-// router.get('/auth/github/callback',
-//   passport.authenticate('github', { failureRedirect: '/login' }),
-//   (req, res) => {
-//     const token = generateToken(req.user);
-//     // Redirige a una página segura o al frontend con el token
-//     res.redirect(`/welcome?token=${token}`);  // Reemplaza `/welcome` con la ruta de tu frontend que maneje el token
-//   }
-// );
 
 module.exports = router;

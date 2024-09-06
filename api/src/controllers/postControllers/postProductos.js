@@ -4,7 +4,7 @@ const fs = require('fs');
 
 const postProductos = async (req, res) => {
   try {
-    const { nombre, descripcion, precio, negocio_id, categoria, stock } = req.body;
+    const { nombre, descripcion, precio, negocio_id, categoria, stock, status } = req.body;
     let imagen = req.file ? req.file.path : req.body.imagen;
 
     if (!nombre || !descripcion || !precio || !negocio_id || !categoria || !stock) {
@@ -40,7 +40,8 @@ const postProductos = async (req, res) => {
       negocio_id,
       imagen,
       categoria,
-      stock
+      stock,
+      status: status || 'activo' // Asignar un estado por defecto si no se proporciona uno
     });
 
     return res.status(201).json(nuevoProducto);
