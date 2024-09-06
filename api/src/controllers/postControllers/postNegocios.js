@@ -74,7 +74,7 @@ const postNegocios = async (req, res) => {
   }
 };
 
-module.exports = postUsuarios; 
+module.exports = postNegocios; 
 
 
 
