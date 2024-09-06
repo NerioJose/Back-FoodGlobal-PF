@@ -11,13 +11,13 @@ module.exports = (sequelize) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    imagen: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
     descripcion: {
       type: DataTypes.STRING,
       allowNull: true,
+    },
+    imagen: {
+      type: DataTypes.STRING,
+      allowNull: true, // Campo para la imagen
     },
     usuario_id: {
       type: DataTypes.UUID, 
@@ -27,8 +27,13 @@ module.exports = (sequelize) => {
         key: 'id',
       },
     },
+    status: {
+      type: DataTypes.ENUM('activo', 'bloqueado', 'eliminado'),
+      allowNull: false,
+      defaultValue: 'activo', // Valor por defecto
+    },
   }, {
     paranoid: true, // Habilita el borrado lógico (registro de eliminaciones)
-    timestamps: true, // Deshabilita los timestamps (createdAt y updatedAt)
+    timestamps: true, // Habilita timestamps (createdAt y updatedAt)
   });
 };

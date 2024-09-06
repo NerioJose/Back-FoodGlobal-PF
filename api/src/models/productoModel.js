@@ -39,8 +39,12 @@ module.exports = (sequelize) => {
         key: 'id',
       },
     },
+    status: {
+      type: DataTypes.ENUM('activo', 'bloqueado', 'eliminado'),
+      defaultValue: 'activo', // Valor por defecto
+    },
   }, {
     paranoid: true, // Habilita el borrado lógico (registro de eliminaciones)
-    timestamps: true, // Deshabilita los timestamps (createdAt y updatedAt)
+    timestamps: true, // Habilita los timestamps (createdAt y updatedAt)
   });
 };
