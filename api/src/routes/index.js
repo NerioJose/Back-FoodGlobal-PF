@@ -22,7 +22,12 @@ const loginUsuario = require('../controllers/postControllers/loginUsuario');
 const deleteProducto = require('../controllers/deleteControllers/deleteProducto');
 
 const deleteUsuario = require('../controllers/deleteControllers/deleteUsuario');
- 
+
+//Update Controllers
+const updateNegocio = require('../controllers/updateControllers/updateNegocio');
+const updateUsuario = require('../controllers/updateControllers/updateUsuario');
+const updateProducto = require('../controllers/updateControllers/updateProducto');
+
 // Block Controllers
 const bloquearNegocio = require('../controllers/blockcontrollers/blockNegocio'); // Importa el controlador de bloqueo de negocio
 const bloquearUsuario = require('../controllers/blockcontrollers/blockUsuario');
@@ -62,6 +67,11 @@ routes.post('/restore/negocios/:id', (req, res) => recoverEntity(Negocio, req, r
 routes.put('/negocios/:id/bloquear', bloquearNegocio); // Ruta para bloquear negocio
 routes.post('/block/usuarios/:id', bloquearUsuario); // Bloquear un usuario
 routes.post('/block/productos/:id', bloquearProducto); // Bloquear un producto
+
+//Rutas para editar datos de Negocios, productos y usuarios
+routes.put('/negocios/:id', updateNegocio);
+routes.put('/usuarios/:id', updateUsuario);
+routes.put('/productos/:id', updateProducto);
 
 
 module.exports = routes;
