@@ -34,6 +34,11 @@ module.exports = (sequelize) => {
       type: DataTypes.STRING,
       allowNull: true, // El campo 'imagen' es opcional
     },
+    status: {
+      type: DataTypes.ENUM('activo', 'bloqueado', 'eliminado'),
+      allowNull: false,
+      defaultValue: 'activo', // Valor por defecto para 'status'
+    },
     rol: {
       type: DataTypes.ENUM('usuario', 'admin', "socio"),
       allowNull: false, // El campo 'rol' es obligatorio
