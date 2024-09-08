@@ -2,6 +2,10 @@ const express = require('express');
 const routes = express.Router();
 
 
+// Importar modelos
+const { Usuario, Producto, Pedido, Pedido_Producto, Pago, Negocio } = require('../db'); // Ajusta la ruta según tu estructura
+
+
 // Importar todos los controladores 
 
 //Get Controllers
@@ -33,6 +37,15 @@ const bloquearNegocio = require('../controllers/blockcontrollers/blockNegocio');
 const bloquearUsuario = require('../controllers/blockcontrollers/blockUsuario');
 const bloquearProducto = require('../controllers/blockcontrollers/blockProducto');
 
+// Purchase Controller
+const finalizarCompra = require('../controllers/purchaseController/finalizarCompra'); // Importa el controlador para finalizar compra
+
+
+// Common Controller
+const recoverEntity = require('../controllers/common/recoverEntity'); // Importa el controlador para restaurar entidades
+
+// Pedido Controller
+const { actualizarEstadoPedido } = require('../controllers/putControllers/pedidoController'); // Importa el controlador para actualizar el estado del pedido
 
 // Configurar las rutas
 routes.get('/negocios', getNegocios); // Obtener la lista de negocios
@@ -50,7 +63,7 @@ routes.post('/usuarios', postUsuarios); // Crear usuarios
 routes.post('/create-payment-intent', paymentIntent); // Ruta para la pasarela stripe
 routes.post('/login', loginUsuario);
 
-routes.delete('/:id', deleteProducto);
+routes.delete('/productos/:id', deleteProducto);
 
 routes.delete('/usuarios/:id', deleteUsuario);
 
@@ -68,10 +81,20 @@ routes.put('/negocios/:id/bloquear', bloquearNegocio); // Ruta para bloquear neg
 routes.post('/block/usuarios/:id', bloquearUsuario); // Bloquear un usuario
 routes.post('/block/productos/:id', bloquearProducto); // Bloquear un producto
 
+
 //Rutas para editar datos de Negocios, productos y usuarios
 routes.put('/negocios/:id', updateNegocio);
 routes.put('/usuarios/:id', updateUsuario);
 routes.put('/productos/:id', updateProducto);
+
+// Nueva ruta para finalizar la compra
+routes.post('/finalizar-compra', finalizarCompra); // Ruta para finalizar la compra
+
+// Nueva ruta para actualizar el estado del pedido
+routes.put('/pedidos/:id/estado', actualizarEstadoPedido); // Ruta para actualizar el estado del pedido
+
+
+
 
 
 module.exports = routes;
