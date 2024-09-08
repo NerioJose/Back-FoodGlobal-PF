@@ -3,12 +3,12 @@ const { DataTypes } = require('sequelize');
 module.exports = (sequelize) => {
   sequelize.define('Pedido', {
     id: {
-      type: DataTypes.UUID,  // UUID para asegurar un identificador único
-      defaultValue: DataTypes.UUIDV4,  // Generar automáticamente UUIDV4
+      type: DataTypes.UUID,  // Cambiado a UUID
+      defaultValue: DataTypes.UUIDV4,  // Se agrega defaultValue para generar automáticamente un UUID
       primaryKey: true,
     },
     usuario_id: {
-      type: DataTypes.UUID,  // Referencia al modelo Usuarios
+      type: DataTypes.UUID,  // UUID es consistente con el modelo Usuarios
       allowNull: false,
       references: {
         model: 'Usuarios',
@@ -16,18 +16,18 @@ module.exports = (sequelize) => {
       },
     },
     fecha: {
-      type: DataTypes.DATE,  // Fecha en la que se realizó el pedido
-      allowNull: false,
+      type: DataTypes.DATE,
+      allowNull: false,  // La fecha de creación del pedido
     },
     total: {
-      type: DataTypes.DECIMAL,  // Total del pedido
-      allowNull: false,
+      type: DataTypes.DECIMAL,
+      allowNull: false,  // El monto total del pedido
     },
-    // Nuevo campo para indicar si se retira o se envía a domicilio
+    // Nuevo campo para indicar si se retira o envía a domicilio
     tipo_entrega: {
-      type: DataTypes.ENUM('retiro', 'domicilio'),  // Solo permite dos opciones: 'retiro' o 'domicilio'
+      type: DataTypes.ENUM('retiro', 'domicilio'),
       allowNull: false,
-      defaultValue: 'retiro',  // Valor por defecto: retiro
+      defaultValue: 'retiro',  // Por defecto, se configura como retiro
     },
     // Modifica el ENUM del campo 'estado' para incluir los nuevos estados
     estado: {
@@ -36,8 +36,8 @@ module.exports = (sequelize) => {
       defaultValue: 'pendiente',  // Estado inicial del pedido
     },
   }, {
-    paranoid: true,  // Habilita el borrado lógico
-    timestamps: true,  // Mantiene las columnas createdAt y updatedAt
+    paranoid: true, // Habilita el borrado lógico (registro de eliminaciones)
+    timestamps: true, // Mantiene createdAt y updatedAt para registro temporal
   });
 };
 

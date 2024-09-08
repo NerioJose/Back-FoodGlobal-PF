@@ -1,6 +1,6 @@
 // controllers/putController/pedidoController.js
 
-const { Pedido } = require('../..//db');
+const { Pedido } = require('../../db');
 
 // Controlador para actualizar el estado del pedido
 const actualizarEstadoPedido = async (req, res) => {
