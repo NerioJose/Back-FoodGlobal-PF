@@ -44,6 +44,8 @@ const finalizarCompra = require('../controllers/purchaseController/finalizarComp
 // Common Controller
 const recoverEntity = require('../controllers/common/recoverEntity'); // Importa el controlador para restaurar entidades
 
+// Pedido Controller
+const { actualizarEstadoPedido } = require('../controllers/putControllers/pedidoController'); // Importa el controlador para actualizar el estado del pedido
 
 // Configurar las rutas
 routes.get('/negocios', getNegocios); // Obtener la lista de negocios
@@ -87,6 +89,11 @@ routes.put('/productos/:id', updateProducto);
 
 // Nueva ruta para finalizar la compra
 routes.post('/finalizar-compra', finalizarCompra); // Ruta para finalizar la compra
+
+// Nueva ruta para actualizar el estado del pedido
+routes.put('/pedidos/:id/estado', actualizarEstadoPedido); // Ruta para actualizar el estado del pedido
+
+
 
 
 
