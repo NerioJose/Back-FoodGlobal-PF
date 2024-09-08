@@ -3,7 +3,7 @@ const { conn: sequelize, Pedido, Pedido_Producto, Producto } = require('../../db
 const finalizarCompra = async (req, res) => {
   const { usuario_id, productos, tipo_entrega, estado = 'pendiente' } = req.body;
 
-  // Verifica que todos los campos requeridos estén presentes
+  // Verifica que todos los campos requeridos estén presentes!
   if (!usuario_id || !productos || !Array.isArray(productos) || productos.length === 0 || !tipo_entrega) {
     return res.status(400).json({ 
       message: 'Faltan datos requeridos: usuario_id, productos o tipo_entrega.' 
