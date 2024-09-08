@@ -1,4 +1,5 @@
 // controllers/common/recoverEntity.js
+
 const recoverEntity = async (model, req, res) => {
   const { id } = req.params;
 
@@ -12,7 +13,18 @@ const recoverEntity = async (model, req, res) => {
       return res.status(404).json({ message: 'Entidad no encontrada o ya restaurada.' });
     }
 
-    return res.status(200).json({ message: 'Entidad restaurada con éxito.', result });
+    // Consulta la entidad después de restaurar
+    const recoveredEntity = await model.findByPk(id);
+
+    // Verifica el estado del producto
+    if (!recoveredEntity) {
+      return res.status(404).json({ message: 'Entidad no encontrada después de restaurar.' });
+    }
+
+    return res.status(200).json({
+      message: 'Entidad restaurada con éxito.',
+      entity: recoveredEntity
+    });
   } catch (error) {
     console.error('Error al restaurar entidad:', error);
     return res.status(500).json({ message: 'Ocurrió un error al restaurar la entidad.', error: error.message });
@@ -20,4 +32,3 @@ const recoverEntity = async (model, req, res) => {
 };
 
 module.exports = recoverEntity;
-

@@ -30,6 +30,9 @@ module.exports = (sequelize) => {
     stock: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      validate: {
+        min: 0, // Asegura que el stock sea mayor o igual a 0
+      },
     },
     negocio_id: {
       type: DataTypes.UUID,
