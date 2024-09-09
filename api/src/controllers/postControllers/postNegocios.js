@@ -47,7 +47,7 @@ const postNegocios = async (req, res) => {
       nombre,
       descripcion,
       imagen, // Guardar la URL de Cloudinary
-      usuario_id,
+      usuario_id
     });
 
     return res.status(201).json(nuevoNegocio);

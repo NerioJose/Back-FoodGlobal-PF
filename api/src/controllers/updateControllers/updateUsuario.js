@@ -3,13 +3,13 @@ const cloudinary = require('cloudinary').v2; // Importa Cloudinary
 
 // Expresiones regulares para validaciones
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/;
+const passwordRegex = /^(?=.\d)(?=.[a-z])(?=.*[A-Z]).{6,20}$/;
 const rolRegex = /^(admin|usuario|socio)$/;
 const nombreRegex = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/;
-
+const statusRegex = /^(activo|bloqueado|eliminado)$/;
 const updateUsuario = async (req, res) => {
   const { id } = req.params;
-  const { nombre, apellido, imagen, email, password, rol } = req.body;
+  const { nombre, apellido, imagen, email, password, rol, status } = req.body;
 
   try {
     // Obtener el usuario existente de la base de datos
@@ -31,6 +31,9 @@ const updateUsuario = async (req, res) => {
     }
     if (rol && !rolRegex.test(rol)) {
       return res.status(400).json({ error: 'El rol debe ser uno de los siguientes: "admin", "usuario", o "socio".' });
+    }
+    if (status && !statusRegex.test(status)) {
+      return res.status(400).json({ error: 'El estado debe ser uno de los siguientes: "activo", "bloqueado", o "eliminado".' });
     }
 
     // Manejo de la imagen en caso de que sea proporcionada
@@ -57,6 +60,7 @@ const updateUsuario = async (req, res) => {
       email: email || usuarioExistente.email,
       password: password || usuarioExistente.password,
       rol: rol || usuarioExistente.rol,
+      status: status || usuarioExistente.status,
     };
 
     // Actualizar el usuario en la base de datos
@@ -70,4 +74,3 @@ const updateUsuario = async (req, res) => {
 };
 
 module.exports = updateUsuario;
-

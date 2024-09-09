@@ -4,11 +4,17 @@ const fs = require('fs');
 const path = require('path');
 
 const {
-  DB_USER, DB_PASSWORD, DB_HOST,
+  DB_USER, DB_PASSWORD, DB_HOST, DB_DEPLOY
 } = process.env;
 
 // Configura la conexión a la base de datos
-const sequelize = new Sequelize(`postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/foodglobal`, {
+//const sequelize = new Sequelize(`postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/foodglobal`, {
+//  logging: false,
+//  native: false,
+//});
+
+// Configura la conexión a la base de datos
+const sequelize = new Sequelize(DB_DEPLOY, {
   logging: false,
   native: false,
 });
