@@ -96,7 +96,7 @@ app.use((err, req, res, next) => {
 
 // Iniciar el servidor y Socket.io en el puerto 3000
 server.listen(3000, () => {
-  console.log('Servidor corriendo en el puerto 3000');
+  console.log('Servidor socket io corriendo en el puerto 3000');
 });
 
 module.exports = app;
