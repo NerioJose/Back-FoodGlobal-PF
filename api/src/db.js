@@ -8,16 +8,16 @@ const {
 } = process.env;
 
 // Configura la conexión a la base de datos
-//const sequelize = new Sequelize(`postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/foodglobal`, {
-//  logging: false,
-//  native: false,
-//});
-
-// Configura la conexión a la base de datos
-const sequelize = new Sequelize(DB_DEPLOY, {
+const sequelize = new Sequelize(`postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/foodglobal`, {
   logging: false,
   native: false,
 });
+
+// Configura la conexión a la base de datos (para producción, descomenta la línea de DB_DEPLOY)
+// const sequelize = new Sequelize(DB_DEPLOY, {
+//   logging: false,
+//   native: false,
+// });
 
 const basename = path.basename(__filename);
 const modelDefiners = [];
@@ -46,52 +46,46 @@ Usuario.hasMany(Chat, { foreignKey: 'usuario_id' });
 Chat.belongsTo(Negocio, { foreignKey: 'negocio_id' });
 Negocio.hasMany(Chat, { foreignKey: 'negocio_id' });
 
-// Relación Negocio
+// Relación Negocio-Usuario
 Negocio.belongsTo(Usuario, { as: 'usuario', foreignKey: 'usuario_id' });
 Usuario.hasMany(Negocio, { foreignKey: 'usuario_id' });
 
-// **NUEVO**: Relación entre Negocio y Producto
-Negocio.hasMany(Producto, {
-  foreignKey: 'negocio_id',
-  sourceKey: 'id',
-});
-// Explicación: Un negocio puede tener múltiples productos asociados. La clave foránea `negocio_id` en `Producto` referencia la columna `id` en `Negocio`.
+// Relación Negocio-Producto
+Negocio.hasMany(Producto, { foreignKey: 'negocio_id' });
+Producto.belongsTo(Negocio, { foreignKey: 'negocio_id' });
 
-Producto.belongsTo(Negocio, {
-  foreignKey: 'negocio_id',
-  targetKey: 'id',
-});
-// Explicación: Cada producto pertenece a un negocio. La clave foránea `negocio_id` en `Producto` apunta a la columna `id` en `Negocio`.
-
-
-
-// Relación Notificación
+// Relación Notificaciones
 Notificaciones.belongsTo(Usuario, { foreignKey: 'usuario_id' });
 Usuario.hasMany(Notificaciones, { foreignKey: 'usuario_id' });
 
-// Relación Pago
+// Relación Pago-Pedido
 Pago.belongsTo(Pedido, { foreignKey: 'pedido_id' });
 Pedido.hasOne(Pago, { foreignKey: 'pedido_id' });
 
-// Relación Pedido
+// Relación Pedido-Usuario
 Pedido.belongsTo(Usuario, {
   foreignKey: {
     name: 'usuario_id',
-    allowNull: false // la columna usuario_id no puede ser nula (NULL), lo que asegura que cada Pedido debe estar asociado a un Usuario. No es posible crear un Pedido sin un Usuario relacionado.
+    allowNull: false
   }
 });
 Usuario.hasMany(Pedido, { foreignKey: 'usuario_id' });
 
-// Relación Producto
-Producto.belongsTo(Negocio, {
-  foreignKey: {
-    name: 'negocio_id',
-    allowNull: false // nunca se puede crear un Producto sin un Negocio asociado
-  }
+// Relación Pedido-Producto (muchos a muchos a través de Pedido_Producto)
+Pedido.belongsToMany(Producto, {
+  through: 'Pedido_Producto',
+  foreignKey: 'pedido_id',
+  otherKey: 'producto_id',
+  as: 'productos'  // Alias para acceder a los productos asociados a un pedido
 });
-Negocio.hasMany(Producto, { foreignKey: 'negocio_id' });
+Producto.belongsToMany(Pedido, {
+  through: 'Pedido_Producto',
+  foreignKey: 'producto_id',
+  otherKey: 'pedido_id',
+  as: 'pedidos'  // Alias para acceder a los pedidos asociados a un producto
+});
 
-// Relación Reseña
+// Relación Reseña-Usuario-Producto
 Reseña.belongsTo(Usuario, { foreignKey: 'usuario_id' });
 Usuario.hasMany(Reseña, { foreignKey: 'usuario_id' });
 Reseña.belongsTo(Producto, { foreignKey: 'producto_id' });
@@ -112,3 +106,4 @@ module.exports = {
   ...sequelize.models,
   conn: sequelize,  // Asegúrate de que conn esté exportado correctamente
 };
+

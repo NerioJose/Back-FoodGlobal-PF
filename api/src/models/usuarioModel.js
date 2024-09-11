@@ -13,9 +13,9 @@ module.exports = (sequelize) => {
       type: DataTypes.STRING,
       allowNull: false, // El campo 'nombre' es obligatorio
     },
-   googleID: {
+    googleID: {
       type: DataTypes.STRING,
-      allowNull: true, // El campo 'nombre' es obligatorio
+      allowNull: true, // El campo 'googleID' es opcional
     },
     apellido: {
       type: DataTypes.STRING,
@@ -28,7 +28,7 @@ module.exports = (sequelize) => {
     },
     password: {
       type: DataTypes.STRING,
-      allowNull: true, // El campo 'password' es obligatorio
+      allowNull: true, // El campo 'password' es opcional si el usuario usa Google
     },
     imagen: { 
       type: DataTypes.STRING,
@@ -40,13 +40,21 @@ module.exports = (sequelize) => {
       defaultValue: 'activo', // Valor por defecto para 'status'
     },
     rol: {
-      type: DataTypes.ENUM('usuario', 'admin', "socio"),
+      type: DataTypes.ENUM('usuario', 'admin', 'socio'),
       allowNull: false, // El campo 'rol' es obligatorio
       defaultValue: 'usuario', // Valor por defecto para 'rol'
     },
+    resetPasswordToken: {
+      type: DataTypes.STRING,
+      allowNull: true, // Se llena cuando el usuario solicita el restablecimiento de contraseña
+    },
+    resetPasswordExpires: {
+      type: DataTypes.DATE,
+      allowNull: true, // Fecha límite para que el token de restablecimiento sea válido
+    },
   }, {
     paranoid: true, // Habilita el borrado lógico (registro de eliminaciones)
-    timestamps: true, // Deshabilita los timestamps (createdAt y updatedAt)
+    timestamps: true, // Mantiene los timestamps (createdAt y updatedAt)
   });
 
   // Método para comparar la contraseña proporcionada con la almacenada en la base de datos

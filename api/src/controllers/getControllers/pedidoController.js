@@ -1,31 +1,28 @@
-// controllers/getController/pedidoController.js
+const { Pedido, Producto } = require('../../db');
 
-const { Pedido } = require('../../db');
-
-// Función para obtener un pedido por ID
 const obtenerPedidoPorId = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const pedido = await Pedido.findByPk(id);
+    const pedido = await Pedido.findByPk(id, {
+      include: {
+        model: Producto,
+        as: 'productos', // Debe coincidir con el alias definido en las asociaciones
+        through: {
+          attributes: ['cantidad'], // Si quieres incluir atributos adicionales de la tabla intermedia
+        },
+      },
+    });
 
     if (!pedido) {
       return res.status(404).json({ error: 'Pedido no encontrado' });
     }
 
-    res.status(200).json({
-      id: pedido.id,
-      usuario_id: pedido.usuario_id,
-      fecha: pedido.fecha,
-      total: pedido.total,
-      tipo_entrega: pedido.tipo_entrega,
-      estado: pedido.estado,  // Muestra el estado actual del pedido
-    });
+    res.status(200).json(pedido);
   } catch (error) {
+    console.error('Error al obtener el pedido:', error);
     res.status(500).json({ error: 'Error al obtener el pedido' });
   }
 };
 
-module.exports = {
-  obtenerPedidoPorId,
-};
+module.exports = { obtenerPedidoPorId };

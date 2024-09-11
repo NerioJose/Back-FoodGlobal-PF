@@ -12,9 +12,8 @@ const getDetailProductos = require('../controllers/getControllers/getDetailProdu
 const getNegocios = require('../controllers/getControllers/getNegocios');
 const getProductos = require('../controllers/getControllers/getProductos');
 const getUsuarios = require('../controllers/getControllers/getUsuarios');
-const getProductosPorNegocio = require('../controllers/getControllers/getProductosPorNegocio'); // Importa el controlador de productos por negocio
-const getPedidos = require('../controllers/getControllers/getPedidos'); // Importar el controlador de pedidos
-
+const getProductosPorNegocio = require('../controllers/getControllers/getProductosPorNegocio'); 
+const getPedidos = require('../controllers/getControllers/getPedidos');
 
 //Post Controllers
 const postNegocios = require('../controllers/postControllers/postNegocios');
@@ -31,68 +30,71 @@ const updateUsuario = require('../controllers/updateControllers/updateUsuario');
 const updateProducto = require('../controllers/updateControllers/updateProducto');
 
 // Block Controllers
-const bloquearNegocio = require('../controllers/blockcontrollers/blockNegocio'); // Importa el controlador de bloqueo de negocio
+const bloquearNegocio = require('../controllers/blockcontrollers/blockNegocio');
 const bloquearUsuario = require('../controllers/blockcontrollers/blockUsuario');
 const bloquearProducto = require('../controllers/blockcontrollers/blockProducto');
 
 // Purchase Controller
-const finalizarCompra = require('../controllers/purchaseController/finalizarCompra'); // Importa el controlador para finalizar compra
+const finalizarCompra = require('../controllers/purchaseController/finalizarCompra');
 
 // Common Controller
-const recoverEntity = require('../controllers/common/recoverEntity'); // Importa el controlador para restaurar entidades
+const recoverEntity = require('../controllers/common/recoverEntity');
 
 // Pedido Controller
-const { actualizarEstadoPedido } = require('../controllers/putControllers/pedidoController'); // Importa el controlador para actualizar el estado del pedido
+const { actualizarEstadoPedido } = require('../controllers/putControllers/pedidoController');
+const { obtenerPedidoPorId } = require('../controllers/getControllers/pedidoController');
 
-// Lo que agregué aquí es la importación del controlador para obtener pedidos por ID:
-const { obtenerPedidoPorId } = require('../controllers/getControllers/pedidoController'); // Importa el controlador para obtener un pedido por ID
+// Notification Controller
+const { enviarNotificacionCorreo } = require('../controllers/notificationController/notificationController'); // Importa el controlador de notificaciones
 
 // Configurar las rutas
-routes.get('/negocios', getNegocios); // Obtener la lista de negocios
-routes.get('/negocios/:id', getDetailNegocios); // Obtener detalles de un negocio específico
-routes.get('/productos', getProductos); // Obtener la lista de productos
-routes.get('/productos/:id', getDetailProductos); // Obtener detalles de un producto específico
-routes.get('/usuarios', getUsuarios); // Obtener la lista de usuarios
-routes.get('/pedidos', getPedidos); // Nueva ruta para obtener todos los pedidos
+routes.get('/negocios', getNegocios); 
+routes.get('/negocios/:id', getDetailNegocios); 
+routes.get('/productos', getProductos); 
+routes.get('/productos/:id', getDetailProductos);
+routes.get('/usuarios', getUsuarios); 
+routes.get('/pedidos', getPedidos);
 
+// Ruta para obtener productos por negocio
+routes.get('/negocios/:negocioId/productos', getProductosPorNegocio); 
 
-// Nueva ruta para obtener productos por negocio
-routes.get('/negocios/:negocioId/productos', getProductosPorNegocio); // Obtener todos los productos de un negocio específico
-
-routes.post('/negocios', postNegocios); // Crear Negocios
-routes.post('/productos', postProductos); // Crear Productos
-routes.post('/usuarios', postUsuarios); // Crear usuarios
-routes.post('/create-payment-intent', paymentIntent); // Ruta para la pasarela stripe
+routes.post('/negocios', postNegocios);
+routes.post('/productos', postProductos); 
+routes.post('/usuarios', postUsuarios); 
+routes.post('/create-payment-intent', paymentIntent); 
 routes.post('/login', loginUsuario);
 
 routes.delete('/productos/:id', deleteProducto);
 routes.delete('/usuarios/:id', deleteUsuario);
 
 // Rutas para recuperación de entidades sin autenticación
-routes.post('/restore/usuarios/:id', (req, res) => recoverEntity(Usuario, req, res)); // Ruta para restaurar usuarios
-routes.post('/restore/productos/:id', (req, res) => recoverEntity(Producto, req, res)); // Ruta para restaurar productos
-routes.post('/restore/pedidos/:id', (req, res) => recoverEntity(Pedido, req, res)); // Ruta para restaurar pedidos
-routes.post('/restore/pedido-producto/:id', (req, res) => recoverEntity(Pedido_Producto, req, res)); // Ruta para restaurar PedidoProducto
-routes.post('/restore/pagos/:id', (req, res) => recoverEntity(Pago, req, res)); // Ruta para restaurar pagos
-routes.post('/restore/negocios/:id', (req, res) => recoverEntity(Negocio, req, res)); // Ruta para restaurar negocios
+routes.post('/restore/usuarios/:id', (req, res) => recoverEntity(Usuario, req, res)); 
+routes.post('/restore/productos/:id', (req, res) => recoverEntity(Producto, req, res)); 
+routes.post('/restore/pedidos/:id', (req, res) => recoverEntity(Pedido, req, res)); 
+routes.post('/restore/pedido-producto/:id', (req, res) => recoverEntity(Pedido_Producto, req, res)); 
+routes.post('/restore/pagos/:id', (req, res) => recoverEntity(Pago, req, res)); 
+routes.post('/restore/negocios/:id', (req, res) => recoverEntity(Negocio, req, res)); 
 
-// Nueva ruta para bloquear negocio
-routes.put('/negocios/:id/bloquear', bloquearNegocio); // Ruta para bloquear negocio
-routes.post('/block/usuarios/:id', bloquearUsuario); // Bloquear un usuario
-routes.post('/block/productos/:id', bloquearProducto); // Bloquear un producto
+// Ruta para bloquear negocio
+routes.put('/negocios/:id/bloquear', bloquearNegocio);
+routes.post('/block/usuarios/:id', bloquearUsuario);
+routes.post('/block/productos/:id', bloquearProducto);
 
 // Rutas para editar datos de Negocios, productos y usuarios
 routes.put('/negocios/:id', updateNegocio);
 routes.put('/usuarios/:id', updateUsuario);
 routes.put('/productos/:id', updateProducto);
 
-// Nueva ruta para finalizar la compra
-routes.post('/finalizar-compra', finalizarCompra); // Ruta para finalizar la compra
+// Ruta para finalizar la compra
+routes.post('/finalizar-compra', finalizarCompra);
 
-// Nueva ruta para actualizar el estado del pedido
-routes.put('/pedidos/:id/estado', actualizarEstadoPedido); // Ruta para actualizar el estado del pedido
+// Ruta para actualizar el estado del pedido
+routes.put('/pedidos/:id/estado', actualizarEstadoPedido);
 
-// Lo que agregué aquí es la nueva ruta para obtener pedidos por ID:
-routes.get('/pedidos/:id', obtenerPedidoPorId); // Nueva ruta para obtener pedido por ID
+// Ruta para obtener pedido por ID
+routes.get('/pedidos/:id', obtenerPedidoPorId);
+
+// Nueva ruta para notificaciones
+routes.post('/notificaciones/enviar-correo', enviarNotificacionCorreo); // Ruta para enviar correos electrónicos
 
 module.exports = routes;

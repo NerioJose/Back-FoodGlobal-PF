@@ -1,4 +1,5 @@
 const { Usuario } = require('../../db');
+const enviarCorreo = require('../../services/mailService');
 
 // Expresiones regulares para validaciones
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; 
@@ -39,6 +40,13 @@ const postUsuarios = async (req, res) => {
       rol, 
       status: 'activo' // Añadimos el estado por defecto 'activo'
     });
+
+    // Enviar el correo de notificación
+    const asunto = 'Confirmación de Registro';
+    const mensaje = `Hola ${nombre},\n\nTu registro en nuestra plataforma ha sido exitoso. ¡Bienvenido!\n\nSaludos,\nEquipo de Soporte`;
+
+    await enviarCorreo(email, asunto, mensaje);
+
     return res.status(201).json(nuevoUsuario);
   } catch (error) {
     console.error(error);
