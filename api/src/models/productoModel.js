@@ -38,10 +38,11 @@ module.exports = (sequelize) => {
       type: DataTypes.UUID,
       allowNull: false,
       references: {
-        model: sequelize.models.Negocio,
+        model: 'Negocios',  // Asegúrate de que el nombre del modelo sea correcto
         key: 'id',
       },
     },
+    
     status: {
       type: DataTypes.ENUM('activo', 'bloqueado', 'eliminado'),
       defaultValue: 'activo', // Valor por defecto

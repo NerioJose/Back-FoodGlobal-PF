@@ -3,12 +3,12 @@ const { DataTypes } = require('sequelize');
 module.exports = (sequelize) => {
   sequelize.define('Pedido', {
     id: {
-      type: DataTypes.UUID,  // Cambiado a UUID
-      defaultValue: DataTypes.UUIDV4,  // Se agrega defaultValue para generar automáticamente un UUID
+      type: DataTypes.UUID,  // El ID es un UUID
+      defaultValue: DataTypes.UUIDV4,  // Se genera automáticamente un UUID
       primaryKey: true,
     },
     usuario_id: {
-      type: DataTypes.UUID,  // UUID es consistente con el modelo Usuarios
+      type: DataTypes.UUID,  // ID del usuario
       allowNull: false,
       references: {
         model: 'Usuarios',
@@ -17,27 +17,24 @@ module.exports = (sequelize) => {
     },
     fecha: {
       type: DataTypes.DATE,
-      allowNull: false,  // La fecha de creación del pedido
+      allowNull: false,  // La fecha del pedido es obligatoria
     },
     total: {
       type: DataTypes.DECIMAL,
-      allowNull: false,  // El monto total del pedido
+      allowNull: false,  // El total del pedido es obligatorio
     },
-    // Nuevo campo para indicar si se retira o envía a domicilio
     tipo_entrega: {
-      type: DataTypes.ENUM('retiro', 'domicilio'),
+      type: DataTypes.ENUM('retiro', 'domicilio'),  // Opciones para el tipo de entrega
       allowNull: false,
-      defaultValue: 'retiro',  // Por defecto, se configura como retiro
+      defaultValue: 'retiro',  // Valor por defecto es 'retiro'
     },
-    // Modifica el ENUM del campo 'estado' para incluir los nuevos estados
     estado: {
       type: DataTypes.ENUM('pendiente', 'en_proceso', 'armando', 'retirando', 'entregado', 'cancelado'),
       allowNull: false,
-      defaultValue: 'pendiente',  // Estado inicial del pedido
+      defaultValue: 'pendiente',  // Valor por defecto es 'pendiente'
     },
   }, {
-    paranoid: true, // Habilita el borrado lógico (registro de eliminaciones)
-    timestamps: true, // Mantiene createdAt y updatedAt para registro temporal
+    paranoid: true,  // Borrado lógico activado
+    timestamps: true,  // Timestamps activados
   });
 };
-
