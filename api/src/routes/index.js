@@ -47,6 +47,10 @@ const { obtenerPedidoPorId } = require('../controllers/getControllers/pedidoCont
 // Notification Controller
 const { enviarNotificacionCorreo } = require('../controllers/notificationController/notificationController'); // Importa el controlador de notificaciones
 
+// Password Reset Controllers
+const { solicitarRestablecimientoContraseña} = require('../controllers/authController/resetPasswordController'); // Asegúrate de que esta ruta esté correcta
+const {restablecerContraseña } = require('../controllers/authController/restorePasswordController'); 
+
 // Configurar las rutas
 routes.get('/negocios', getNegocios); 
 routes.get('/negocios/:id', getDetailNegocios); 
@@ -96,5 +100,9 @@ routes.get('/pedidos/:id', obtenerPedidoPorId);
 
 // Nueva ruta para notificaciones
 routes.post('/notificaciones/enviar-correo', enviarNotificacionCorreo); // Ruta para enviar correos electrónicos
+
+// Rutas para restablecimiento de contraseña
+routes.post('/request-password-reset', solicitarRestablecimientoContraseña);
+routes.post('/reset-password', restablecerContraseña);
 
 module.exports = routes;
