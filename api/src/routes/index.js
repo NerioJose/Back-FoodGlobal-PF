@@ -9,6 +9,7 @@ const { Usuario, Producto, Pedido, Pedido_Producto, Pago, Negocio } = require('.
 //Get Controllers
 const getDetailNegocios = require('../controllers/getControllers/getDetailNegocios');
 const getDetailProductos = require('../controllers/getControllers/getDetailProductos');
+const getDetailUsuarios = require('../controllers/getControllers/getDetailUsuarios')
 const getNegocios = require('../controllers/getControllers/getNegocios');
 const getProductos = require('../controllers/getControllers/getProductos');
 const getUsuarios = require('../controllers/getControllers/getUsuarios');
@@ -58,6 +59,7 @@ routes.get('/negocios/:id', getDetailNegocios);
 routes.get('/productos', getProductos); 
 routes.get('/productos/:id', getDetailProductos);
 routes.get('/usuarios', getUsuarios); 
+routes.get('/usuarios/:id', getDetailUsuarios); 
 routes.get('/pedidos', getPedidos);
 
 // Ruta para obtener productos por negocio
