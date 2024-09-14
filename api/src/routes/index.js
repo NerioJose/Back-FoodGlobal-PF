@@ -23,6 +23,7 @@ const paymentIntent = require('../controllers/paymentControllers/paymentControll
 const loginUsuario = require('../controllers/postControllers/loginUsuario');
 const deleteProducto = require('../controllers/deleteControllers/deleteProducto');
 const deleteUsuario = require('../controllers/deleteControllers/deleteUsuario');
+const deleteNegocio = require('../controllers/deleteControllers/deleteNegocio')
 
 //Update Controllers
 const updateNegocio = require('../controllers/updateControllers/updateNegocio');
@@ -70,6 +71,8 @@ routes.post('/login', loginUsuario);
 
 routes.delete('/productos/:id', deleteProducto);
 routes.delete('/usuarios/:id', deleteUsuario);
+routes.delete('/negocios/:id', deleteNegocio);
+
 
 // Rutas para recuperación de entidades sin autenticación
 routes.post('/restore/usuarios/:id', (req, res) => recoverEntity(Usuario, req, res)); 
