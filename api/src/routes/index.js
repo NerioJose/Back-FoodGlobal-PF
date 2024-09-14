@@ -9,6 +9,7 @@ const { Usuario, Producto, Pedido, Pedido_Producto, Pago, Negocio } = require('.
 //Get Controllers
 const getDetailNegocios = require('../controllers/getControllers/getDetailNegocios');
 const getDetailProductos = require('../controllers/getControllers/getDetailProductos');
+const getDetailUsuarios = require('../controllers/getControllers/getDetailUsuarios')
 const getNegocios = require('../controllers/getControllers/getNegocios');
 const getProductos = require('../controllers/getControllers/getProductos');
 const getUsuarios = require('../controllers/getControllers/getUsuarios');
@@ -23,6 +24,7 @@ const paymentIntent = require('../controllers/paymentControllers/paymentControll
 const loginUsuario = require('../controllers/postControllers/loginUsuario');
 const deleteProducto = require('../controllers/deleteControllers/deleteProducto');
 const deleteUsuario = require('../controllers/deleteControllers/deleteUsuario');
+const deleteNegocio = require('../controllers/deleteControllers/deleteNegocio')
 
 //Update Controllers
 const updateNegocio = require('../controllers/updateControllers/updateNegocio');
@@ -57,6 +59,7 @@ routes.get('/negocios/:id', getDetailNegocios);
 routes.get('/productos', getProductos); 
 routes.get('/productos/:id', getDetailProductos);
 routes.get('/usuarios', getUsuarios); 
+routes.get('/usuarios/:id', getDetailUsuarios); 
 routes.get('/pedidos', getPedidos);
 
 // Ruta para obtener productos por negocio
@@ -70,6 +73,8 @@ routes.post('/login', loginUsuario);
 
 routes.delete('/productos/:id', deleteProducto);
 routes.delete('/usuarios/:id', deleteUsuario);
+routes.delete('/negocios/:id', deleteNegocio);
+
 
 // Rutas para recuperación de entidades sin autenticación
 routes.post('/restore/usuarios/:id', (req, res) => recoverEntity(Usuario, req, res)); 
