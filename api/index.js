@@ -21,7 +21,7 @@ const server = require('./src/app.js');
 const { conn } = require('./src/db.js'); 
 const port = process.env.PORT || 3001;
 // Sincronizar todos los modelos y luego iniciar el servidor
-conn.sync({ alter: true }).then(async () => {
+conn.sync({ alter: true}).then(async () => {
 
   // Iniciar el servidor en el puerto especificado
   server.listen(port, () => {

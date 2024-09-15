@@ -43,8 +43,9 @@ const finalizarCompra = require('../controllers/purchaseController/finalizarComp
 const recoverEntity = require('../controllers/common/recoverEntity');
 
 // Pedido Controller
-const { actualizarEstadoPedido } = require('../controllers/putControllers/pedidoController');
+// const { obtenerPedidoPorId } = require('../controllers/putControllers/pedidoController');
 const { obtenerPedidoPorId } = require('../controllers/getControllers/pedidoController');
+const { actualizarDetallesEntrega } = require('../controllers/putControllers/actualizarDetallesEntrega');
 
 // Notification Controller
 const { enviarNotificacionCorreo } = require('../controllers/notificationController/notificationController'); // Importa el controlador de notificaciones
@@ -98,10 +99,14 @@ routes.put('/productos/:id', updateProducto);
 routes.post('/finalizar-compra', finalizarCompra);
 
 // Ruta para actualizar el estado del pedido
-routes.put('/pedidos/:id/estado', actualizarEstadoPedido);
+// routes.put('/pedidos/:id/estado', actualizarEstadoPedido);
 
 // Ruta para obtener pedido por ID
 routes.get('/pedidos/:id', obtenerPedidoPorId);
+
+// Ruta para actualizar los detalles de entrega de un pedido
+routes.put('/pedidos/:pedido_id/entrega', actualizarDetallesEntrega);
+
 
 // Nueva ruta para notificaciones
 routes.post('/notificaciones/enviar-correo', enviarNotificacionCorreo); // Ruta para enviar correos electrónicos
