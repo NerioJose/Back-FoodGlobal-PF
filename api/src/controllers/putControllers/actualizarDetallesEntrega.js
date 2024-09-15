@@ -5,6 +5,7 @@ const actualizarDetallesEntrega = async (req, res) => {
   const { pedido_id } = req.params; // Obtener el pedido_id desde los parámetros de la ruta
 
   try {
+    // Buscar el pedido por ID
     const pedido = await Pedido.findByPk(pedido_id);
 
     if (!pedido) {
@@ -14,15 +15,16 @@ const actualizarDetallesEntrega = async (req, res) => {
     // Verificar el tipo de entrega y los datos requeridos
     if (tipo_entrega === 'retiro') {
       // Verificar que los datos necesarios para la entrega por retiro estén presentes
-      if (!datos_entrega.nombre_persona || !datos_entrega.documento_identidad) {
+      const { nombre_persona, documento_identidad } = datos_entrega;
+      if (!nombre_persona || !documento_identidad) {
         return res.status(400).json({ message: 'Faltan datos para la entrega por retiro.' });
       }
 
-      // Actualizar solo los datos para el retiro
+      // Actualizar solo los datos para el retiro y limpiar los datos de domicilio
       await pedido.update({
         tipo_entrega: 'retiro',
-        nombre_persona: datos_entrega.nombre_persona,
-        documento_identidad: datos_entrega.documento_identidad,
+        nombre_persona,
+        documento_identidad,
         ciudad: null, // Limpiar los datos de domicilio si antes fue seleccionado
         direccion_envio: null,
         codigo_postal: null,
@@ -30,16 +32,17 @@ const actualizarDetallesEntrega = async (req, res) => {
 
     } else if (tipo_entrega === 'domicilio') {
       // Verificar que los datos necesarios para la entrega a domicilio estén presentes
-      if (!datos_entrega.ciudad || !datos_entrega.direccion_envio || !datos_entrega.codigo_postal) {
+      const { ciudad, direccion_envio, codigo_postal } = datos_entrega;
+      if (!ciudad || !direccion_envio || !codigo_postal) {
         return res.status(400).json({ message: 'Faltan datos para la entrega a domicilio.' });
       }
 
-      // Actualizar solo los datos para la entrega a domicilio
+      // Actualizar solo los datos para la entrega a domicilio y limpiar los datos de retiro
       await pedido.update({
         tipo_entrega: 'domicilio',
-        ciudad: datos_entrega.ciudad,
-        direccion_envio: datos_entrega.direccion_envio,
-        codigo_postal: datos_entrega.codigo_postal,
+        ciudad,
+        direccion_envio,
+        codigo_postal,
         nombre_persona: null, // Limpiar los datos de retiro si antes fue seleccionado
         documento_identidad: null,
       });
@@ -49,8 +52,14 @@ const actualizarDetallesEntrega = async (req, res) => {
       return res.status(400).json({ message: 'Tipo de entrega no válido.' });
     }
 
-    // Devolver una respuesta exitosa
-    return res.status(200).json({ message: 'Detalles de entrega actualizados correctamente.' });
+    // Obtener el pedido actualizado para retornarlo en la respuesta
+    const pedidoActualizado = await Pedido.findByPk(pedido_id);
+
+    // Devolver el pedido actualizado como respuesta
+    return res.status(200).json({
+      message: 'Detalles de entrega actualizados correctamente.',
+      pedido: pedidoActualizado
+    });
 
   } catch (error) {
     // Manejo de errores

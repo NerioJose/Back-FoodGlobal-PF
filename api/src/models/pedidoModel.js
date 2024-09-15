@@ -15,6 +15,14 @@ module.exports = (sequelize) => {
         key: 'id',
       },
     },
+    negocio_id: {  // Agregamos el ID de negocio
+      type: DataTypes.UUID,
+      allowNull: false,
+      references: {
+        model: 'Negocios',  // Relación con el modelo Negocio
+        key: 'id',
+      },
+    },
     fecha: {
       type: DataTypes.DATE,
       allowNull: false,  // La fecha del pedido es obligatoria

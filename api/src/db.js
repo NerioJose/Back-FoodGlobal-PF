@@ -101,9 +101,12 @@ Carrito.hasMany(Carrito_Producto, { foreignKey: 'carrito_id' });
 Carrito_Producto.belongsTo(Producto, { foreignKey: 'producto_id' });
 Producto.hasMany(Carrito_Producto, { foreignKey: 'producto_id' });
 
+// Relación Pedido-Negocio (nueva relación añadida)
+Pedido.belongsTo(Negocio, { foreignKey: 'negocio_id', as: 'negocio' });
+Negocio.hasMany(Pedido, { foreignKey: 'negocio_id', as: 'pedidos' });
+
 // Exporta la conexión y los modelos
 module.exports = {
   ...sequelize.models,
   conn: sequelize,  // Asegúrate de que conn esté exportado correctamente
 };
-
