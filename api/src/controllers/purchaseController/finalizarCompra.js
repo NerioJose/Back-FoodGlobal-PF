@@ -1,5 +1,5 @@
 const { conn: sequelize, Pedido, Pedido_Producto, Producto, Usuario } = require('../../db');
-const enviarCorreo = require('../../services/mailService'); // Importa el servicio de correo
+const enviarCorreo = require('../../services/mailService');
 
 const finalizarCompra = async (req, res, io) => {
   const { usuario_id, productos, tipo_entrega, estado = 'pendiente' } = req.body;
@@ -46,29 +46,20 @@ const finalizarCompra = async (req, res, io) => {
       await producto.update({ stock: producto.stock - item.cantidad }, { transaction });
     }
 
-    // Confirmar la transacción
     await transaction.commit();
 
-    // Obtener el correo del usuario
     const usuario = await Usuario.findByPk(usuario_id);
-
-    // Preparar el correo de confirmación
     const asunto = 'Compra exitosa - Tu pedido está en proceso';
     const mensaje = `Gracias por tu compra, ${usuario.nombre}. Tu pedido está en proceso de armado.\n\nDetalles del pedido:\nPedido ID: ${nuevoPedido.id}\nFecha: ${nuevoPedido.fecha}\nTotal: ${nuevoPedido.total}.\nTipo de entrega: ${nuevoPedido.tipo_entrega}.\n\nTe avisaremos cuando esté listo para ser enviado.`;
 
-    // Enviar el correo al usuario y emitir el evento después del commit
     try {
       await enviarCorreo(usuario.email, asunto, mensaje);
-      console.log(`Correo enviado con éxito a ${usuario.email}`);
-
-      // Emitir un evento con socket.io después del commit
-      io.emit(`pedido_${usuario_id}`, { 
-        message: 'Compra finalizada con éxito. Tu pedido está en proceso de armado.', 
-        pedido: nuevoPedido 
+      io.emit(`pedido_${usuario_id}`, {
+        message: 'Compra finalizada con éxito. Tu pedido está en proceso de armado.',
+        pedido: nuevoPedido,
       });
     } catch (error) {
       console.error('Error al enviar el correo o emitir evento:', error);
-      // Nota: Aquí no puedes hacer rollback porque la transacción ya está confirmada
     }
 
     return res.status(200).json({
@@ -87,8 +78,7 @@ const finalizarCompra = async (req, res, io) => {
       },
     });
   } catch (error) {
-    await transaction.rollback(); // Revertir la transacción en caso de error antes del commit
-    console.error('Error al finalizar la compra:', error);
+    await transaction.rollback();
     return res.status(500).json({ message: 'Ocurrió un error al finalizar la compra.', error: error.message });
   }
 };
