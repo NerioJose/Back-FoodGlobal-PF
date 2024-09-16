@@ -2,10 +2,11 @@ const { conn: sequelize, Pedido, Pedido_Producto, Producto, Usuario } = require(
 const enviarCorreo = require('../../services/mailService');
 
 const finalizarCompra = async (req, res, io) => {
-  const { usuario_id, productos, tipo_entrega, estado = 'pendiente' } = req.body;
+  const { usuario_id, negocio_id, productos, tipo_entrega, estado = 'pendiente' } = req.body;
 
-  if (!usuario_id || !productos || !Array.isArray(productos) || productos.length === 0 || !tipo_entrega) {
-    return res.status(400).json({ message: 'Faltan datos requeridos: usuario_id, productos o tipo_entrega.' });
+  // Validar que se envíen todos los datos requeridos
+  if (!usuario_id || !negocio_id || !productos || !Array.isArray(productos) || productos.length === 0 || !tipo_entrega) {
+    return res.status(400).json({ message: 'Faltan datos requeridos: usuario_id, negocio_id, productos o tipo_entrega.' });
   }
 
   const transaction = await sequelize.transaction();
@@ -25,8 +26,10 @@ const finalizarCompra = async (req, res, io) => {
       total += producto.precio * item.cantidad;
     }
 
+    // Incluir negocio_id al crear el pedido
     const nuevoPedido = await Pedido.create({
       usuario_id,
+      negocio_id,  // Este campo es requerido
       fecha: new Date(),
       total,
       tipo_entrega,
@@ -67,6 +70,7 @@ const finalizarCompra = async (req, res, io) => {
       pedido: {
         id: nuevoPedido.id,
         usuario_id: nuevoPedido.usuario_id,
+        negocio_id: nuevoPedido.negocio_id,  // Devolver negocio_id en la respuesta
         fecha: nuevoPedido.fecha,
         total: nuevoPedido.total,
         tipo_entrega: nuevoPedido.tipo_entrega,
