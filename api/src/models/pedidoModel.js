@@ -41,6 +41,27 @@ module.exports = (sequelize) => {
       allowNull: false,
       defaultValue: 'pendiente',
     },
+    // Campos adicionales para los datos de entrega
+    ciudad: {
+      type: DataTypes.STRING,
+      allowNull: true,  // Solo se usa para domicilio
+    },
+    direccion_envio: {
+      type: DataTypes.STRING,
+      allowNull: true,  // Solo se usa para domicilio
+    },
+    codigo_postal: {
+      type: DataTypes.STRING,
+      allowNull: true,  // Solo se usa para domicilio
+    },
+    nombre: {
+      type: DataTypes.STRING,
+      allowNull: true,  // Solo se usa para retiro
+    },
+    documento_identidad: {
+      type: DataTypes.STRING,
+      allowNull: true,  // Solo se usa para retiro
+    },
   }, {
     paranoid: true,
     timestamps: true,
