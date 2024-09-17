@@ -1,23 +1,13 @@
-// controllers/common/recoverEntity.js
-const recoverEntity = async (model, req, res) => {
+const recoverEntity = async (Model, req, res) => {
   const { id } = req.params;
-
   try {
-    // Restaurar la entidad usando el método `restore` de Sequelize
-    const result = await model.restore({
-      where: { id },
-    });
-
-    if (result[0] === 0) {
-      return res.status(404).json({ message: 'Entidad no encontrada o ya restaurada.' });
+    const restoredEntity = await Model.restore({ where: { id } });
+    if (restoredEntity) {
+      return res.status(200).send('Entity restored successfully');
+    } else {
+      return res.status(404).send('Entity not found or already active');
     }
-
-    return res.status(200).json({ message: 'Entidad restaurada con éxito.', result });
   } catch (error) {
-    console.error('Error al restaurar entidad:', error);
-    return res.status(500).json({ message: 'Ocurrió un error al restaurar la entidad.', error: error.message });
+    return res.status(500).send('Error restoring entity: ' + error.message);
   }
 };
-
-module.exports = recoverEntity;
-

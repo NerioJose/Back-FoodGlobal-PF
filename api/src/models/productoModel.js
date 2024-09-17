@@ -30,15 +30,19 @@ module.exports = (sequelize) => {
     stock: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      validate: {
+        min: 0, // Asegura que el stock sea mayor o igual a 0
+      },
     },
     negocio_id: {
       type: DataTypes.UUID,
       allowNull: false,
       references: {
-        model: sequelize.models.Negocio,
+        model: 'Negocios',  // Asegúrate de que el nombre del modelo sea correcto
         key: 'id',
       },
     },
+    
     status: {
       type: DataTypes.ENUM('activo', 'bloqueado', 'eliminado'),
       defaultValue: 'activo', // Valor por defecto
