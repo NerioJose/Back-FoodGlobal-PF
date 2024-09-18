@@ -1,15 +1,15 @@
 const fs = require('fs');
-const cloudinary = require('cloudinary').v2; // Importa y configura Cloudinary
+const cloudinary = require('cloudinary').v2;
 const { Negocio, Usuario } = require('../../db');
 
 // Expresiones regulares para validaciones
-const nombreRegex = /^[A-Za-z0-9\s]{3,}$/; // Nombre con al menos 3 caracteres, puede contener letras, números y espacios
-const descripcionRegex = /^.{10,1000}$/; // Descripción entre 10 y 1000 caracteres
+const nombreRegex = /^[A-Za-z0-9\s]{3,}$/;
+const descripcionRegex = /^.{10,1000}$/;
 
 const postNegocios = async (req, res) => {
   try {
     const { nombre, descripcion, imagen: imagenLocal, usuario_id } = req.body;
-    let imagen = imagenLocal; // Usa let aquí para permitir la reasignación
+    let imagen = imagenLocal;
 
     // Validaciones con expresiones regulares
     if (!nombreRegex.test(nombre)) {
@@ -30,13 +30,19 @@ const postNegocios = async (req, res) => {
       return res.status(400).json({ message: 'El usuario no existe.' });
     }
 
+    // Verificar si ya existe un negocio con el mismo nombre
+    const negocioExistente = await Negocio.findOne({ where: { nombre } });
+    if (negocioExistente) {
+      return res.status(400).json({ message: `Ya existe un negocio con el nombre "${nombre}".` });
+    }
+
     // Subir la imagen a Cloudinary
     try {
       const uploadResult = await cloudinary.uploader.upload(imagen, {
         folder: 'foodglobal',
         resource_type: 'image',
       });
-      imagen = uploadResult.secure_url; // Siempre usar la URL de Cloudinary
+      imagen = uploadResult.secure_url;
     } catch (error) {
       console.error('Error al subir la imagen a Cloudinary:', error);
       return res.status(500).json({ message: 'Ocurrió un error al subir la imagen.', error: error.message });
@@ -46,7 +52,7 @@ const postNegocios = async (req, res) => {
     const nuevoNegocio = await Negocio.create({
       nombre,
       descripcion,
-      imagen, // Guardar la URL de Cloudinary
+      imagen,
       usuario_id
     });
 
@@ -58,7 +64,3 @@ const postNegocios = async (req, res) => {
 };
 
 module.exports = postNegocios;
-
-
-
-
