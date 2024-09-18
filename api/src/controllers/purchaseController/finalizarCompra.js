@@ -1,8 +1,9 @@
 const { conn: sequelize, Pedido, Pedido_Producto, Producto, Usuario } = require('../../db');
 const enviarCorreo = require('../../services/mailService');
 
-const finalizarCompra = async (req, res, io) => {
+const finalizarCompra = async (req, res) => {
   const { usuario_id, negocio_id, productos, tipo_entrega, estado = 'pendiente', datos_entrega } = req.body;
+  const io = req.io; // Obteniendo la instancia de Socket.IO desde req
 
   // Validación de campos requeridos
   if (!usuario_id || !negocio_id || !productos || !Array.isArray(productos) || productos.length === 0 || !tipo_entrega || !datos_entrega) {
@@ -11,13 +12,11 @@ const finalizarCompra = async (req, res, io) => {
 
   // Validación de datos según el tipo de entrega
   if (tipo_entrega === 'domicilio') {
-    console.log('Datos de entrega recibidos para domicilio:', datos_entrega); // Log para depurar
     const { ciudad, direccion_envio, codigo_postal } = datos_entrega;
     if (!ciudad || !direccion_envio || !codigo_postal) {
       return res.status(400).json({ message: 'Faltan datos de entrega para el tipo de entrega domicilio.' });
     }
   } else if (tipo_entrega === 'retiro') {
-    console.log('Datos de entrega recibidos para retiro:', datos_entrega); // Log para depurar
     const { nombre, documento_identidad } = datos_entrega;
     if (!nombre || !documento_identidad) {
       return res.status(400).json({ message: 'Faltan datos de retiro: nombre o documento de identidad.' });
@@ -44,7 +43,7 @@ const finalizarCompra = async (req, res, io) => {
       total += producto.precio * item.cantidad;
     }
 
-    // Crear el pedido con los datos correspondientes según el tipo de entrega
+    // Crear el pedido
     const nuevoPedido = await Pedido.create({
       usuario_id,
       negocio_id,
@@ -63,7 +62,7 @@ const finalizarCompra = async (req, res, io) => {
       }),
     }, { transaction });
 
-    // Guardar los detalles del pedido en la tabla Pedido_Producto
+    // Guardar los detalles del pedido
     const detalles = productos.map(item => ({
       pedido_id: nuevoPedido.id,
       producto_id: item.producto_id,
@@ -72,7 +71,7 @@ const finalizarCompra = async (req, res, io) => {
 
     await Pedido_Producto.bulkCreate(detalles, { transaction });
 
-    // Actualizar el stock de los productos
+    // Actualizar el stock
     for (const item of productos) {
       const producto = await Producto.findByPk(item.producto_id, { transaction });
       await producto.update({ stock: producto.stock - item.cantidad }, { transaction });
@@ -84,19 +83,22 @@ const finalizarCompra = async (req, res, io) => {
     // Enviar correo al usuario
     const usuario = await Usuario.findByPk(usuario_id);
     const asunto = 'Compra exitosa - Tu pedido está en proceso';
-    const mensaje = `Gracias por tu compra, ${usuario.nombre}. Tu pedido está en proceso de armado.\n\nDetalles del pedido:\nPedido ID: ${nuevoPedido.id}\nFecha: ${nuevoPedido.fecha}\nTotal: ${nuevoPedido.total}.\nTipo de entrega: ${nuevoPedido.tipo_entrega}.\n\nTe avisaremos cuando esté listo para ser enviado.`;
+    const mensaje = `Gracias por tu compra, ${usuario.nombre}. Tu pedido está en proceso de armado.`;
 
     try {
       await enviarCorreo(usuario.email, asunto, mensaje);
-      io.emit(`pedido_${usuario_id}`, {
-        message: 'Compra finalizada con éxito. Tu pedido está en proceso de armado.',
-        pedido: nuevoPedido,
-      });
+      if (io && typeof io.emit === 'function') {
+        io.emit(`pedido_${usuario_id}`, {
+          message: 'Compra finalizada con éxito. Tu pedido está en proceso de armado.',
+          pedido: nuevoPedido,
+        });
+      } else {
+        console.error('Socket.IO no está disponible.');
+      }
     } catch (error) {
       console.error('Error al enviar el correo o emitir evento:', error);
     }
 
-    // Formatear correctamente los datos de entrega en la respuesta
     const datosEntrega = tipo_entrega === 'domicilio'
       ? {
         ciudad: nuevoPedido.ciudad,
@@ -126,7 +128,6 @@ const finalizarCompra = async (req, res, io) => {
       },
     });
   } catch (error) {
-    // Rollback de la transacción en caso de error
     await transaction.rollback();
     return res.status(500).json({ message: 'Ocurrió un error al finalizar la compra.', error: error.message });
   }
