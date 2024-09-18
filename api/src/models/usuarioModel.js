@@ -35,7 +35,7 @@ module.exports = (sequelize) => {
       allowNull: true, // El campo 'imagen' es opcional
     },
     status: {
-      type: DataTypes.ENUM('activo', 'bloqueado', 'eliminado'),
+      type: DataTypes.ENUM('activo', 'bloqueado', 'eliminado', 'pendiente'),
       allowNull: false,
       defaultValue: 'activo', // Valor por defecto para 'status'
     },

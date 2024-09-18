@@ -1,6 +1,4 @@
 //? Configura y exporta el transportador
-
-
 const nodemailer = require('nodemailer');
 
 const transporter = nodemailer.createTransport({
@@ -11,4 +9,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+
+
 module.exports = transporter;
+  

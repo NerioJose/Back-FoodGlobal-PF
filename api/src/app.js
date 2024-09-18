@@ -14,6 +14,7 @@ const { Server } = require('socket.io');
 const cors = require('cors'); // Importamos el middleware cors
 const corsOptions = require('./middleware/corsOptions.js'); // Importamos las opciones de CORS
 
+
 require('./db.js');
 require('./passport.js');
 

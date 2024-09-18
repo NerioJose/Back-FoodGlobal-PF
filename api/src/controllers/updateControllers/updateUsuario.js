@@ -66,6 +66,18 @@ const updateUsuario = async (req, res) => {
     // Actualizar el usuario en la base de datos
     await Usuario.update(camposActualizados, { where: { id } });
 
+    if (camposActualizados.rol === 'socio') {
+      const asunto = 'Confirmación de Socio';
+      const mensaje = `Hola ${camposActualizados.nombre},\n\nTu petición como socio en nuestra plataforma ha sido exitoso. ¡Bienvenido!\n\nSaludos,\nEquipo de Soporte FoodGlobal`;
+
+      try {
+        await enviarCorreo(camposActualizados.email, asunto, mensaje);
+      } catch (error) {
+        console.error('Error al enviar el correo al usuario:', error);
+        return res.status(500).json({ mensaje: 'Error al enviar el correo al usuario', error: error.message });
+      }
+    }
+
     res.json({ mensaje: 'Usuario actualizado exitosamente', usuario: camposActualizados });
   } catch (error) {
     console.error('Error al actualizar el usuario:', error);

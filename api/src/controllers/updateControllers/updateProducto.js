@@ -3,7 +3,7 @@ const cloudinary = require('cloudinary').v2;
 
 const updateProducto = async (req, res) => {
   const { id } = req.params;
-  const { nombre, descripcion, precio, categoria, stock, imagen: imagenLocal } = req.body;
+  const { nombre, descripcion, precio, categoria, stock, imagen: imagenLocal, status } = req.body;
 
   try {
     // Obtener el producto existente de la base de datos
@@ -38,7 +38,7 @@ const updateProducto = async (req, res) => {
       imagen, // Guardar la URL de Cloudinary o la existente
       categoria: categoria || productoExistente.categoria,
       stock: stock || productoExistente.stock,
-      // No se actualiza negocio_id
+      status: status || productoExistente.status,
     };
 
     // Actualizar el producto en la base de datos

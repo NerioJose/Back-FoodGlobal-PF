@@ -8,7 +8,7 @@ const rolRegex = /^(admin|usuario|socio)$/;
 const nombreRegex = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/;
 
 const postUsuarios = async (req, res) => {
-  const { nombre, apellido, imagen, email, password, rol } = req.body;
+  const { nombre, apellido, imagen, email, password, rol, status } = req.body;
 
   // Validaciones (ya las tienes bien definidas)
   if (typeof nombre !== 'string' || nombre.length < 3 || !nombreRegex.test(nombre)) {
@@ -38,14 +38,29 @@ const postUsuarios = async (req, res) => {
       email, 
       password, 
       rol, 
-      status: 'activo' // Añadimos el estado por defecto 'activo'
+      status
     });
 
-    // Enviar el correo de notificación
-    const asunto = 'Confirmación de Registro';
-    const mensaje = `Hola ${nombre},\n\nTu registro en nuestra plataforma ha sido exitoso. ¡Bienvenido!\n\nSaludos,\nEquipo de Soporte`;
-
-    await enviarCorreo(email, asunto, mensaje);
+       // Enviar el correo de notificación
+       const asunto = 'Confirmación de Registro';
+       const mensaje = `Hola ${nombre},\n\nTu registro en nuestra plataforma ha sido exitoso. ¡Bienvenido!\n\nSaludos,\nEquipo de Soporte FoodGlobal`;
+   
+       await enviarCorreo(email, asunto, mensaje);
+       const destinatarioAdmin = process.env.EMAIL_USER; // Asegúrate de configurar el correo del admin en tu .env
+       const asuntoAdmin = 'Aprobación de nuevo socio';
+       const mensajeAdmin = 
+       ` Hola , admin. \n\nEl siguiente usuario está solicitando tu aprobación para ser socio y luego poder crear su negocio.\n\nNomre: ${nombre}, \nApellido: ${apellido}, \nEmail: ${email}. \n\nDirijete a tu dashboard en la plataforma para modificar su estado y rol, en caso de aceptarlo. \n\nSaludos,\nEquipo de Soporte FoodGlobal`
+        
+       ;
+       if (status === 'pendiente') {
+   
+       try {
+         await enviarCorreo(destinatarioAdmin, asuntoAdmin, mensajeAdmin);
+       } catch (error) {
+         console.error('Error al enviar el correo:', error);
+         return res.status(500).json({ message: 'Ocurrió un error al enviar el correo al administrador.', error: error.message });
+       }
+     }
 
     return res.status(201).json(nuevoUsuario);
   } catch (error) {

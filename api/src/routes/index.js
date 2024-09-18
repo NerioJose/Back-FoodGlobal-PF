@@ -85,6 +85,7 @@ routes.post('/restore/pedido-producto/:id', (req, res) => recoverEntity(Pedido_P
 routes.post('/restore/pagos/:id', (req, res) => recoverEntity(Pago, req, res)); 
 routes.post('/restore/negocios/:id', (req, res) => recoverEntity(Negocio, req, res)); 
 
+
 // Ruta para bloquear negocio
 routes.put('/negocios/:id/bloquear', bloquearNegocio);
 routes.post('/block/usuarios/:id', bloquearUsuario);
