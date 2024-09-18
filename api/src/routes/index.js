@@ -115,4 +115,6 @@ routes.post('/notificaciones/enviar-correo', enviarNotificacionCorreo); // Ruta 
 routes.post('/request-password-reset', solicitarRestablecimientoContraseña);
 routes.post('/reset-password', restablecerContraseña);
 
+
 module.exports = routes;
+

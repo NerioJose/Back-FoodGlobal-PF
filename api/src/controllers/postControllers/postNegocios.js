@@ -64,3 +64,7 @@ const postNegocios = async (req, res) => {
 };
 
 module.exports = postNegocios;
+
+
+
+
