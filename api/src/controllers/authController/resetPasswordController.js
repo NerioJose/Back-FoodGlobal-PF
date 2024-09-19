@@ -21,7 +21,7 @@ const solicitarRestablecimientoContraseña = async (req, res) => {
     await usuario.save();
 
     // Enviar correo con el token
-    const resetURL = `http://tu-dominio.com/reset-password?token=${token}`;
+    const resetURL = `http://localhost:3000/reset?token=${token}`;
     const asunto = 'Solicitud de restablecimiento de contraseña';
     const mensaje = `Para restablecer tu contraseña, haz clic en el siguiente enlace: ${resetURL}`;
 

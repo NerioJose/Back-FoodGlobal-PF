@@ -113,8 +113,8 @@ routes.put('/pedidos/:pedido_id/entrega', actualizarDetallesEntrega);
 routes.post('/notificaciones/enviar-correo', enviarNotificacionCorreo); // Ruta para enviar correos electrónicos
 
 // Rutas para restablecimiento de contraseña
-routes.post('/request-password-reset', solicitarRestablecimientoContraseña);
-routes.post('/reset-password', restablecerContraseña);
+routes.post('/reset-password', solicitarRestablecimientoContraseña);
+routes.post('/update-password', restablecerContraseña);
 
 
 module.exports = routes;
