@@ -7,17 +7,17 @@ const {
   DB_USER, DB_PASSWORD, DB_HOST, DB_DEPLOY
 } = process.env;
 
-// Configura la conexión a la base de datos
-const sequelize = new Sequelize(`postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/foodglobal`, {
-  logging: false,
-  native: false,
-});
-
-// Configura la conexión a la base de datos (para producción, descomenta la línea de DB_DEPLOY)
-// const sequelize = new Sequelize(DB_DEPLOY, {
+// Configura la conexión a la base de datos (para desarrollo, puedes descomentar la línea de abajo y comentar la de DB_DEPLOY)
+// const sequelize = new Sequelize(`postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/foodglobal`, {
 //   logging: false,
 //   native: false,
 // });
+
+// Configura la conexión a la base de datos (para producción, descomenta la línea de DB_DEPLOY)
+const sequelize = new Sequelize(DB_DEPLOY, {
+  logging: false,
+  native: false,
+});
 
 const basename = path.basename(__filename);
 const modelDefiners = [];
