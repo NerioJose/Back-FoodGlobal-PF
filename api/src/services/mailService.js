@@ -1,16 +1,16 @@
 //?  Usa el transportador importado desde emailConfig.js para enviar correos.
+
+
 const transporter = require('./emailConfig'); // Asegúrate de que la ruta sea correcta
-const fs = require('fs');
-const path = require('path');
 
 
 
-const enviarCorreo = async (destinatario, nombre, link) => {
+const enviarCorreo = async (destinatario, asunto, mensaje) => {
   const mailOptions = {
     from: process.env.EMAIL_USER, // Correo de origen
     to: destinatario,             // Correo del destinatario
     subject: asunto,              // Asunto del correo
-    html: obtenerTemplateHTML(nombre, link), // Usamos HTML para el contenido del correo
+    text: mensaje,                // Mensaje del correo
   };
 
   try {
