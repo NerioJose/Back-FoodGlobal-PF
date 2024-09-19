@@ -6,6 +6,10 @@ const { Op } = require('sequelize');
 const restablecerContraseña = async (req, res) => {
   const { token, nuevaPassword } = req.body;
 
+  if (!token || !nuevaPassword) {
+    return res.status(400).json({ error: 'Token y nueva contraseña son requeridos.' });
+  }
+
   try {
     const usuario = await Usuario.findOne({
       where: {
@@ -18,12 +22,11 @@ const restablecerContraseña = async (req, res) => {
       return res.status(400).json({ error: 'Token inválido o expirado.' });
     }
 
-  // Hashear la nueva contraseña
-  const saltRounds = 10;
-  usuario.password = await bcrypt.hash(nuevaPassword, saltRounds); // Aquí se hashea la contraseña
+    // Hashear la nueva contraseña
+    const saltRounds = 10;
+    usuario.password = await bcrypt.hash(nuevaPassword, saltRounds);
 
-    // Actualizar la contraseña y limpiar el token
-   // usuario.password = nuevaPassword; // Asegúrate de hashear la contraseña antes de guardarla
+    // Limpiar el token y la expiración
     usuario.resetPasswordToken = null;
     usuario.resetPasswordExpires = null;
     await usuario.save();
@@ -34,5 +37,6 @@ const restablecerContraseña = async (req, res) => {
     res.status(500).json({ error: 'Error al restablecer la contraseña.' });
   }
 };
+
 
 module.exports = { restablecerContraseña };
