@@ -15,7 +15,7 @@ const obtenerPedidoPorId =  async (req, res) => {
           include: {
             model: Producto, // Incluir los detalles del producto en cada entrada
             as: 'producto',
-            attributes: ['nombre', 'precio'] // Solo incluir nombre y precio de los productos
+            attributes: ['nombre', 'precio', 'imagen'] // Incluir nombre, precio e imagen de los productos
           }
         },
         {
@@ -50,7 +50,8 @@ const obtenerPedidoPorId =  async (req, res) => {
         producto_id: detalle.producto_id,
         nombre: detalle.producto.nombre,
         cantidad: detalle.cantidad,
-        precio: detalle.producto.precio
+        precio: detalle.producto.precio,
+        imagen: detalle.producto.imagen  // Incluir la imagen del producto
       }))
     };
 
