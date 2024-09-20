@@ -87,6 +87,8 @@ const finalizarCompra = async (req, res) => {
 
     try {
       await enviarCorreo(usuario.email, asunto, mensaje);
+
+      // Aquí está el código para emitir el evento a través de Socket.IO
       if (io && typeof io.emit === 'function') {
         io.emit(`pedido_${usuario_id}`, {
           message: 'Compra finalizada con éxito. Tu pedido está en proceso de armado.',
@@ -95,6 +97,7 @@ const finalizarCompra = async (req, res) => {
       } else {
         console.error('Socket.IO no está disponible.');
       }
+
     } catch (error) {
       console.error('Error al enviar el correo o emitir evento:', error);
     }
@@ -132,5 +135,6 @@ const finalizarCompra = async (req, res) => {
     return res.status(500).json({ message: 'Ocurrió un error al finalizar la compra.', error: error.message });
   }
 };
+
 
 module.exports = finalizarCompra;

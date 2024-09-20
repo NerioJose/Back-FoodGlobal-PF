@@ -31,6 +31,13 @@ const io = new Server(server, {
   },
 });
 
+
+// Middleware para inyectar la instancia de Socket.IO en cada request
+app.use((req, res, next) => {
+  req.io = io; // Asignamos la instancia de io a req
+  next();
+});
+
 // Configuramos Socket.io para manejar conexiones
 io.on('connection', (socket) => {
   console.log('Usuario conectado:', socket.id);
