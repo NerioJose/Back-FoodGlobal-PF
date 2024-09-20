@@ -1,12 +1,12 @@
 const { Usuario } = require('../../db');
 const cloudinary = require('cloudinary').v2; // Importa Cloudinary
-
+const enviarCorreo = require('../../services/mailService');
 // Expresiones regulares para validaciones
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const passwordRegex = /^(?=.\d)(?=.[a-z])(?=.*[A-Z]).{6,20}$/;
 const rolRegex = /^(admin|usuario|socio)$/;
 const nombreRegex = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/;
-const statusRegex = /^(activo|bloqueado|eliminado)$/;
+const statusRegex = /^(activo|bloqueado|eliminado|pendiente)$/;
 const updateUsuario = async (req, res) => {
   const { id } = req.params;
   const { nombre, apellido, imagen, email, password, rol, status } = req.body;
@@ -26,9 +26,9 @@ const updateUsuario = async (req, res) => {
     if (email && !emailRegex.test(email)) {
       return res.status(400).json({ error: 'El email debe ser una dirección de correo electrónico válida.' });
     }
-    if (password && !passwordRegex.test(password)) {
-      return res.status(400).json({ error: 'La contraseña debe tener entre 6 y 20 caracteres, con al menos un número, una letra mayúscula y una letra minúscula.' });
-    }
+    // if (password && !passwordRegex.test(password)) {
+    //   return res.status(400).json({ error: 'La contraseña debe tener entre 6 y 20 caracteres, con al menos un número, una letra mayúscula y una letra minúscula.' });
+    // }
     if (rol && !rolRegex.test(rol)) {
       return res.status(400).json({ error: 'El rol debe ser uno de los siguientes: "admin", "usuario", o "socio".' });
     }
